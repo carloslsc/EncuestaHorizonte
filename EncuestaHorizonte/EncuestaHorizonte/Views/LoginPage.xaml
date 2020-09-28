@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EncuestaHorizonte.Views.LoginPage"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             Title="Inicio de Sesión"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <ScrollView 
+            BindingContext="{Binding Login}">
+            <StackLayout
+                Padding="20">
+                <!--<Image
+                    Margin="0, 50, 0, 10"
+                    Source="logo"
+                    WidthRequest="200"/>-->
+                <Frame
+                    BackgroundColor="Transparent"
+                    HeightRequest="150"
+                    Padding="3">
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Usuario"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Keyboard="Email"
+                        Text="{Binding Email, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Usuario"
+                        PlaceholderColor="Black"
+                        VerticalOptions="EndAndExpand"/>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Contraseña"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                    Padding="10, 0, 10, 0">
+                    <Entry
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    IsPassword="true"
+                    Text="{Binding Password, Mode=TwoWay}"
+                    TextColor="Black"
+                    Placeholder="Contraseña"
+                    PlaceholderColor="Black"
+                    VerticalOptions="EndAndExpand"/>
+                </Frame>
+                <ActivityIndicator
+                    IsVisible="{Binding Visible, Mode=TwoWay}"
+                    IsRunning="{Binding IsRunning, Mode=TwoWay}"
+                    VerticalOptions="CenterAndExpand"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding LoginCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Iniciar Sesión"
+                    TextColor="White"
+                />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
