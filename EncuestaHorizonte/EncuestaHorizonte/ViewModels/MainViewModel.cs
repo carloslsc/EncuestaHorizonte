@@ -6,7 +6,7 @@
 
     public class MainViewModel
     {
-        /*
+        
         #region Properties
         public string Area { get; set; }
 
@@ -16,9 +16,9 @@
 
         public string Servidor { get; set; }
 
-        public Empleado TheEmp { get; set; }
+        //public Empleado TheEmp { get; set; }
         #endregion
-        */
+        
 
 
         #region ViewModels
@@ -34,24 +34,25 @@
             set;
         }
 
-        /*public ConfigurationViewModel Configuration
+        public ConfigurationViewModel Configuration
         {
             get;
             set;
         }
 
-        public EmployeeViewModel Employee
+        /*public EmployeeViewModel Employee
         {
             get;
             set;
         }
 
-        public EmployeeDataViewModel EmployeeData
+        */
+        public AfiliadoCreateViewModel AfiliadoCreate
         {
             get;
             set;
         }
-
+        /*
         public EmployeeEditViewModel EmployeeEdit
         {
             get;
@@ -71,10 +72,10 @@
             instance = this;
             this.Login = new LoginViewModel();
             this.Inicio = new InicioViewModel();
-            /*this.Configuration = new ConfigurationViewModel();
-            this.Employee = new EmployeeViewModel();
-            this.EmployeeData = new EmployeeDataViewModel();
-            this.EmployeeEdit = new EmployeeEditViewModel();
+            this.Configuration = new ConfigurationViewModel();
+            //this.Employee = new EmployeeViewModel();
+            this.AfiliadoCreate = new AfiliadoCreateViewModel();
+            /*this.EmployeeEdit = new EmployeeEditViewModel();
             this.EmployeeLabor = new EmployeeLaborViewModel();*/
         }
         #endregion

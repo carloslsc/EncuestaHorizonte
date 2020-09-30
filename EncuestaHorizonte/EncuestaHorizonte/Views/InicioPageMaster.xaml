@@ -11,20 +11,16 @@
       <ListView.Header>
         <Grid BackgroundColor="#03A9F4">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
           </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
           </Grid.RowDefinitions>
           <Label
-              Grid.Column="1"
-              Grid.Row="2"
-              Text="AppName"
+              Grid.Column="0"
+              Grid.Row="0"
+              Text="Opciones"
+              TextColor="White"
               Style="{DynamicResource SubtitleStyle}"/>
         </Grid>
       </ListView.Header>

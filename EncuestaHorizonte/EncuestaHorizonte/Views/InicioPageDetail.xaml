@@ -3,12 +3,64 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
              x:Class="EncuestaHorizonte.Views.InicioPageDetail"
-             Title="Detail">
-  <ScrollView
+             Title="Afiliados">
+  <StackLayout
       BindingContext="{Binding Inicio}"
       Padding="10">
-        <StackLayout>
-            
-        </StackLayout>
-  </ScrollView>
+        <ListView
+                x:Name="Lista"
+                SelectedItem="{Binding Afi, Mode=TwoWay}"
+                SeparatorColor="#FBDD12"
+                RowHeight="50">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label
+                                FontSize="Medium"
+                                HorizontalOptions="StartAndExpand"
+                                Text="{Binding NomAfi, Mode=TwoWay}"
+                                TextColor="White"
+                                VerticalOptions="Start"/>
+                        </StackLayout>
+                        <!--Text="{Binding NomEmp, Mode=TwoWay}"
+                            TextColor="White"
+                            Detail="{Binding DescLab, Mode=TwoWay}"
+                            DetailColor="#FBDD12">-->
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ActivityIndicator
+                IsVisible="{Binding IsVisible, Mode=TwoWay}"
+                IsRunning="{Binding IsRunning, Mode=TwoWay}"
+                VerticalOptions="CenterAndExpand"/>
+        <Grid
+                Margin="0, 10, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding EditarCommand}"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Text="Editar"
+                    TextColor="White"/>
+            <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding CapturarCommand}"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Text="Capturar"
+                    TextColor="White"/>
+        </Grid>
+    </StackLayout>
 </ContentPage>

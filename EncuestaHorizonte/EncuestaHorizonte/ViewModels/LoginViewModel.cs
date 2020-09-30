@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using EncuestaHorizonte.Helpers;
 
 namespace EncuestaHorizonte.ViewModels
 {
@@ -65,13 +66,12 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Login()
         {
-            /*
-            if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
+            
+            /*if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
             {
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
             }
-            */
-            if (string.IsNullOrEmpty(this.Email))
+            else*/ if (string.IsNullOrEmpty(this.Email))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -95,7 +95,7 @@ namespace EncuestaHorizonte.ViewModels
                 this.IsRunning = false;
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
             }*/
-            else if (!this.Password.Equals("12345678") || !this.Email.Equals("admin")/*this.Password.Equals(Settings.Password) || !this.Email.Equals(Settings.Usuario)*/)
+            else if (!this.Password.Equals("1") || !this.Email.Equals("1")/*this.Password.Equals(Settings.Password) || !this.Email.Equals(Settings.Usuario)*/)
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -216,7 +216,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Email = string.Empty;
                     this.Password = string.Empty;
 
-                    Application.Current.MainPage = new NavigationPage(new InicioPage());
+                    Application.Current.MainPage = /*new NavigationPage(*/new InicioPage();//);
                     //}
                 //}
             }

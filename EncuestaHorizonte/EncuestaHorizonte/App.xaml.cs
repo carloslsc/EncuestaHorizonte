@@ -7,11 +7,16 @@ namespace EncuestaHorizonte
 {
     public partial class App : Application
     {
-        public App()
+
+        public static string DatabaseLocation = string.Empty;
+
+        public App(string databaseLocation)
         {
             InitializeComponent();
 
             this.MainPage = new NavigationPage(new LoginPage());
+
+            DatabaseLocation = databaseLocation;
 
             //MainPage = new MainPage();
         }

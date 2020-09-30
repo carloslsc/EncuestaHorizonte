@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             Title="Configuración"
+             x:Class="EncuestaHorizonte.Views.ConfigurationPage"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <ScrollView
+            BindingContext="{Binding Configuration}">
+            <StackLayout
+                Padding="20">
+                <Grid
+                    Padding="0, 0, 0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        FontSize="Large"
+                        Text="AREA"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                    <Frame
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Padding="10, 1, 10, 1">
+                        <Entry
+                            VerticalOptions="CenterAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="Area"
+                            PlaceholderColor="Black"
+                            Keyboard="Numeric"
+                            Text="{Binding Area, Mode=TwoWay}"
+                            TextColor="Black"/>
+                    </Frame>
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        FontSize="Large"
+                        Text="SERVIDOR"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                    <Frame
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Padding="10, 1, 10, 1">
+                        <Entry
+                            VerticalOptions="CenterAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="255.255.255.255"
+                            PlaceholderColor="Black"
+                            Text="{Binding Servidor,Mode=TwoWay}"
+                            TextColor="Black"/>
+                    </Frame>
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        FontSize="Large"
+                        Text="ADMIN U"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                    <Frame
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Padding="10, 1, 10, 1">
+                        <Entry
+                            VerticalOptions="CenterAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="Usuario Admin"
+                            PlaceholderColor="Black"
+                            Text="{Binding AdminU,Mode=TwoWay}"
+                            TextColor="Black"/>
+                    </Frame>
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        FontSize="Large"
+                        Text="ADMIN C"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                    <Frame
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        Padding="10, 1, 10, 1">
+                        <Entry
+                            VerticalOptions="CenterAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="Contraseña Admin"
+                            PlaceholderColor="Black"
+                            IsPassword="true"
+                            Text="{Binding AdminP,Mode=TwoWay}"
+                            TextColor="Black"/>
+                    </Frame>
+                </Grid>
+                <ActivityIndicator
+                    IsVisible="{Binding Visible, Mode=TwoWay}"
+                    IsRunning="{Binding Running, Mode=TwoWay}"
+                    VerticalOptions="CenterAndExpand"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding ActualizarCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Actualizar"
+                    TextColor="White"/>
+                <Frame
+                    BackgroundColor="White"
+                    Padding="10"
+                    Margin="0, 0, 0, 10">
+                    <Label
+                        FontSize="20"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="PARA PODER ACTUALIZAR LOS USUARIOS PRESIONE EL SIGUIENTE BOTON"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                </Frame>
+                <ActivityIndicator
+                    IsVisible="{Binding IsVisible, Mode=TwoWay}"
+                    IsRunning="{Binding IsRunning, Mode=TwoWay}"
+                    VerticalOptions="CenterAndExpand"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding UsuariosCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Actualizar Usuarios"
+                    TextColor="White"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

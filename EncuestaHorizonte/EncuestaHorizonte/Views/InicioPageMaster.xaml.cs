@@ -33,11 +33,8 @@ namespace EncuestaHorizonte.Views
             {
                 MenuItems = new ObservableCollection<InicioPageMasterMenuItem>(new[]
                 {
-                    new InicioPageMasterMenuItem { Id = 0, Title = "Page 1" },
-                    new InicioPageMasterMenuItem { Id = 1, Title = "Page 2" },
-                    new InicioPageMasterMenuItem { Id = 2, Title = "Page 3" },
-                    new InicioPageMasterMenuItem { Id = 3, Title = "Page 4" },
-                    new InicioPageMasterMenuItem { Id = 4, Title = "Page 5" },
+                    new InicioPageMasterMenuItem { Id = 0, Title = "Sincronizar" },
+                    new InicioPageMasterMenuItem { Id = 1, Title = "Cerrar Sesión" }
                 });
             }
 
