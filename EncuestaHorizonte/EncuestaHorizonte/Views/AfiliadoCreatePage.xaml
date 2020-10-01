@@ -10,6 +10,23 @@
             BindingContext="{Binding AfiliadoCreate}">
             <StackLayout
                 Padding="20">
+                <Image 
+                    Aspect="AspectFill"
+                    x:Name="Image"
+                    Source="{Binding ImageSource}"
+                    HorizontalOptions="Center"
+                    HeightRequest="150"
+                    WidthRequest="140"
+                    VerticalOptions="Center"
+                    BackgroundColor="#F0F0F0"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding SelectImageCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Nueva Imagen"
+                    TextColor="White"
+                    />
                 <Label
                     FontSize="15"
                     Text="Municipio"
@@ -38,6 +55,7 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
                         Text="{Binding Region, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Región"
@@ -55,6 +73,7 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
                         Text="{Binding Zona, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Zona"
@@ -72,6 +91,7 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
                         Text="{Binding Seccion, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Sección"
@@ -106,6 +126,7 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
                         Text="{Binding Promotor, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Promotor"
@@ -331,6 +352,7 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
                         Text="{Binding NumIne, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Número de INE"
@@ -384,7 +406,7 @@
                         HorizontalTextAlignment="Center"
                         Text="{Binding Facebook, Mode=TwoWay}"
                         TextColor="Black"
-                        Placeholder="Facebook"
+                        Placeholder="Ej. @UsuarioFacebook"
                         PlaceholderColor="Black"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
@@ -405,10 +427,6 @@
                         PlaceholderColor="Black"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
-                <ActivityIndicator
-                    IsVisible="{Binding IsVisible, Mode=TwoWay}"
-                    IsRunning="{Binding IsRunning, Mode=TwoWay}"
-                    VerticalOptions="CenterAndExpand"/>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>

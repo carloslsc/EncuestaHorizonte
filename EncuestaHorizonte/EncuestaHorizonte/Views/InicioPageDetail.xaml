@@ -3,31 +3,74 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
              x:Class="EncuestaHorizonte.Views.InicioPageDetail"
-             Title="Afiliados">
+             Title="Afiliados"
+             BackgroundColor="White">
   <StackLayout
       BindingContext="{Binding Inicio}"
       Padding="10">
         <ListView
                 x:Name="Lista"
                 SelectedItem="{Binding Afi, Mode=TwoWay}"
-                SeparatorColor="#FBDD12"
+                SeparatorColor="#0288D1"
                 RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout>
-                            <Label
-                                FontSize="Medium"
-                                HorizontalOptions="StartAndExpand"
-                                Text="{Binding NomAfi, Mode=TwoWay}"
-                                TextColor="White"
-                                VerticalOptions="Start"/>
-                        </StackLayout>
-                        <!--Text="{Binding NomEmp, Mode=TwoWay}"
-                            TextColor="White"
-                            Detail="{Binding DescLab, Mode=TwoWay}"
-                            DetailColor="#FBDD12">-->
-
+                        <ViewCell.View>
+                            <ContentView 
+                                Padding="10"
+                                BackgroundColor="{Binding BackgroundColor}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Image 
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Source="{Binding Foto, Mode=TwoWay}"
+                                        /> 
+                                    <Label
+                                        FontSize="Medium"
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="{Binding Nombre, Mode=TwoWay}"
+                                        TextColor="Black"
+                                        VerticalOptions="Start"/>
+                                    <Label
+                                        FontSize="Medium"
+                                        Grid.Column="2"
+                                        Grid.Row="0"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="{Binding NombreSegundo, Mode=TwoWay}"
+                                        TextColor="Black"
+                                        VerticalOptions="Start"/>
+                                    <Label
+                                        FontSize="Medium"
+                                        Grid.Column="3"
+                                        Grid.Row="0"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="{Binding ApellidoPat, Mode=TwoWay}"
+                                        TextColor="Black"
+                                        VerticalOptions="Start"/>
+                                    <Label
+                                        FontSize="Medium"
+                                        Grid.Column="4" 
+                                        Grid.Row="0"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="{Binding ApellidoMat, Mode=TwoWay}"
+                                        TextColor="Black"
+                                        VerticalOptions="Start"/>
+                                </Grid>
+                            </ContentView>
+                        </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

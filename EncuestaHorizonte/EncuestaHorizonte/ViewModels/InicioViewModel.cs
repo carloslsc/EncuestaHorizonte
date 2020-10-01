@@ -17,6 +17,7 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Attributes
+        private string backgroundColor;
         private bool isVisible;
         private bool isRunning;
         private ObservableCollection<Afiliado> afiliados;
@@ -24,7 +25,7 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<Afiliado> Empleados
+        public ObservableCollection<Afiliado> Afiliados
         {
             get { return this.afiliados; }
             set { SetValue(ref this.afiliados, value); }
@@ -33,7 +34,21 @@ namespace EncuestaHorizonte.ViewModels
         public Afiliado Afi
         {
             get { return this.afi; }
-            set { SetValue(ref this.afi, value); }
+            set 
+            {
+                if (this.afi != value)
+                {
+                    this.afi = value;
+                    this.BackgroundColor = "Gray";
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string BackgroundColor
+        {
+            get { return this.backgroundColor; }
+            set { SetValue(ref this.backgroundColor, value); }
         }
 
         public bool IsVisible
@@ -54,6 +69,7 @@ namespace EncuestaHorizonte.ViewModels
         {
             //this.apiService = new ApiService();
             this.Afi = new Afiliado();
+            this.BackgroundColor = "Transparent";
         }
         #endregion
 
