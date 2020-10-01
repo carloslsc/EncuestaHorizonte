@@ -52,13 +52,13 @@
             get;
             set;
         }
-        /*
-        public EmployeeEditViewModel EmployeeEdit
+        
+        public AfiliadoEditViewModel AfiliadoEdit
         {
             get;
             set;
         }
-
+        /*
         public EmployeeLaborViewModel EmployeeLabor
         {
             get;
@@ -75,8 +75,8 @@
             this.Configuration = new ConfigurationViewModel();
             //this.Employee = new EmployeeViewModel();
             this.AfiliadoCreate = new AfiliadoCreateViewModel();
-            /*this.EmployeeEdit = new EmployeeEditViewModel();
-            this.EmployeeLabor = new EmployeeLaborViewModel();*/
+            this.AfiliadoEdit = new AfiliadoEditViewModel();
+            //this.EmployeeLabor = new EmployeeLaborViewModel();*/
         }
         #endregion
 
