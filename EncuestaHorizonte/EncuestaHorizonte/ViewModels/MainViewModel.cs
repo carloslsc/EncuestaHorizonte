@@ -1,5 +1,6 @@
 ﻿namespace EncuestaHorizonte.ViewModels
 {
+    using EncuestaHorizonte.Models;
     //using EncuestaHorizonte.;
     using System.Collections.Generic;
     //using Bananera.Models;
@@ -16,7 +17,7 @@
 
         public string Servidor { get; set; }
 
-        //public Empleado TheEmp { get; set; }
+        public Afiliado TheAfi { get; set; }
         #endregion
         
 

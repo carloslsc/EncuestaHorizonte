@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EncuestaHorizonte.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,13 @@ namespace EncuestaHorizonte.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AfiliadoEditPage : ContentPage
     {
-        public AfiliadoEditPage()
+        Afiliado Afi = new Afiliado();
+
+        public AfiliadoEditPage(Afiliado TheAfi)
         {
+
+
+
             InitializeComponent();
         }
     }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"     
              x:Class="EncuestaHorizonte.Views.InicioPage"
              xmlns:pages="clr-namespace:EncuestaHorizonte.Views"
+             NavigationPage.HasNavigationBar="false"
              >
   <MasterDetailPage.Master>
     <pages:InicioPageMaster x:Name="MasterPage" />

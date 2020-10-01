@@ -216,7 +216,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Email = string.Empty;
                     this.Password = string.Empty;
 
-                    Application.Current.MainPage = /*new NavigationPage(*/new InicioPage();//);
+                    Application.Current.MainPage = new NavigationPage(new InicioPage());
                     //}
                 //}
             }

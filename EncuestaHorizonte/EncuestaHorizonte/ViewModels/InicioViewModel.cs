@@ -34,15 +34,7 @@ namespace EncuestaHorizonte.ViewModels
         public Afiliado Afi
         {
             get { return this.afi; }
-            set 
-            {
-                if (this.afi != value)
-                {
-                    this.afi = value;
-                    this.BackgroundColor = "Gray";
-                    OnPropertyChanged();
-                }
-            }
+            set { SetValue(ref this.afi, value);}
         }
 
         public string BackgroundColor
@@ -194,9 +186,9 @@ namespace EncuestaHorizonte.ViewModels
                 //{
                     //var mainViewModel = MainViewModel.GetInstance();
                     //mainViewModel.AfiliadoCreate.TheEmployee = this.Afi;
-                    //await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage(/*this.Afi*/));
+                    await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage(/*this.Afi*/));
 
-                    Application.Current.MainPage = /*new NavigationPage(*/new AfiliadoCreatePage();//);
+                    //Application.Current.MainPage = /*new NavigationPage(*/new AfiliadoCreatePage();//);
 
                 /*}
                 else
@@ -218,7 +210,7 @@ namespace EncuestaHorizonte.ViewModels
         {
             if (!this.Afi.Id.Equals(0))
             {
-                //await Application.Current.MainPage.Navigation.PushAsync(new EmployeeLaborPage(this.Emp));
+                await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(this.Afi));
             }
             else
             {

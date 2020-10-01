@@ -265,10 +265,9 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Methods
-        public void Cancelar()
+        public async void Cancelar()
         {
-            Application.Current.MainPage = new InicioPage();
-            //await Application.Current.MainPage.Navigation.PopAsync();
+            await Application.Current.MainPage.Navigation.PopAsync();
         }
 
         public async void SelectImage()

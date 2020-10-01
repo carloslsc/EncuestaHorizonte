@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
              x:Class="EncuestaHorizonte.Views.InicioPageDetail"
+             xmlns:costum="clr-namespace:EncuestaHorizonte.Costum;assembly=EncuestaHorizonte"
              Title="Afiliados"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             >
   <StackLayout
       BindingContext="{Binding Inicio}"
       Padding="10">
@@ -15,7 +17,9 @@
                 RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
+                    <costum:ViewCellRender
+                            SelectedBackgroundColor="#BBDEFB"
+                            >
                         <ViewCell.View>
                             <ContentView 
                                 Padding="10"
@@ -65,7 +69,7 @@
                                 </Grid>
                             </ContentView>
                         </ViewCell.View>
-                    </ViewCell>
+                    </costum:ViewCellRender>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
