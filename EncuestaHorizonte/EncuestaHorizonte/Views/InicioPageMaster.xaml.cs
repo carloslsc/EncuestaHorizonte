@@ -21,13 +21,13 @@ namespace EncuestaHorizonte.Views
         {
             InitializeComponent();
 
-            BindingContext = new InicioPageMasterViewModel();
+            //BindingContext = new InicioPageMasterViewModel();
             ListView = MenuItemsListView;
         }
 
-        class InicioPageMasterViewModel : INotifyPropertyChanged
+        class InicioPageMasterViewModel //: INotifyPropertyChanged
         {
-            public ObservableCollection<InicioPageMasterMenuItem> MenuItems { get; set; }
+            /*public ObservableCollection<InicioPageMasterMenuItem> MenuItems { get; set; }
 
             public InicioPageMasterViewModel()
             {
@@ -36,17 +36,17 @@ namespace EncuestaHorizonte.Views
                     new InicioPageMasterMenuItem { Id = 0, Title = "Sincronizar" },
                     new InicioPageMasterMenuItem { Id = 1, Title = "Cerrar Sesión" }
                 });
-            }
+            }*/
 
             #region INotifyPropertyChanged Implementation
-            public event PropertyChangedEventHandler PropertyChanged;
+            /*public event PropertyChangedEventHandler PropertyChanged;
             void OnPropertyChanged([CallerMemberName] string propertyName = "")
             {
                 if (PropertyChanged == null)
                     return;
 
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            }*/
             #endregion
         }
     }

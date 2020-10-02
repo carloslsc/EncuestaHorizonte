@@ -169,7 +169,7 @@ namespace EncuestaHorizonte.ViewModels
 
         private async void Editar()
         {
-            if (!this.Afi.Id.Equals(0))
+            if (this.Afi.Id > 0)
             {
                 var afiliado = this.Afi;
                 this.Afi = new Afiliado();

@@ -35,6 +35,12 @@
             set;
         }
 
+        public InicioMasterViewModel InicioMaster
+        {
+            get;
+            set;
+        }
+
         public ConfigurationViewModel Configuration
         {
             get;
@@ -59,12 +65,6 @@
             get;
             set;
         }
-        /*
-        public EmployeeLaborViewModel EmployeeLabor
-        {
-            get;
-            set;
-        }*/
         #endregion
 
         #region Constructors
@@ -74,6 +74,7 @@
             this.Login = new LoginViewModel();
             this.Inicio = new InicioViewModel();
             this.Configuration = new ConfigurationViewModel();
+            this.InicioMaster = new InicioMasterViewModel();
             //this.Employee = new EmployeeViewModel();
             this.AfiliadoCreate = new AfiliadoCreateViewModel();
             this.AfiliadoEdit = new AfiliadoEditViewModel();
