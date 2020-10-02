@@ -22,7 +22,7 @@ namespace EncuestaHorizonte.Helpers
         const string servidor = "Servidor";
         const string adminU = "AdminU";
         const string adminP = "AdminP";
-        //const string hora = "Hora";
+        const string id = "0";
         static readonly string stringDefault = string.Empty;
 
         public static string Area
@@ -93,6 +93,18 @@ namespace EncuestaHorizonte.Helpers
             set
             {
                 AppSettings.AddOrUpdateValue(adminP, value);
+            }
+        }
+
+        public static string Id
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(id, stringDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(id, value);
             }
         }
 

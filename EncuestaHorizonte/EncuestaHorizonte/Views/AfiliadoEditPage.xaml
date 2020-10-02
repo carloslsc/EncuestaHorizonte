@@ -18,8 +18,9 @@
                     HeightRequest="150"
                     WidthRequest="140"
                     VerticalOptions="Center"
-                    BackgroundColor="#F0F0F0"/>
-                <Button
+                    BackgroundColor="#F0F0F0">
+                </Image>
+                    <Button
                     BackgroundColor="#0288D1"
                     BorderWidth="3"
                     Command="{Binding SelectImageCommand}"
@@ -35,6 +36,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Municipio"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -52,6 +54,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Region"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -70,6 +73,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Zona"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -88,6 +92,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Seccion"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -106,6 +111,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Casilla"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -123,6 +129,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Promotor"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -141,6 +148,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Comunidad"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -158,6 +166,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Nombre"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -175,6 +184,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="NombreSegundo"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -192,6 +202,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="ApellidoPat"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -209,6 +220,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="ApellidoMat"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -226,6 +238,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Domicilio"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -243,6 +256,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="TelefonoFijo"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -261,6 +275,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="TelefonoCelular"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -279,6 +294,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="TelefonoAlter"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -297,6 +313,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Ocupacion"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -314,6 +331,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Escolaridad"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -331,6 +349,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Email"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -349,6 +368,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="NumIne"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -367,6 +387,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="ClaveIne"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -384,6 +405,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Curp"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -401,6 +423,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Facebook"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -418,6 +441,7 @@
                 <Frame
                         Padding="10, 0, 10, 0">
                     <Entry
+                        x:Name="Observacion"
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -439,7 +463,7 @@
                     <Button
                         BackgroundColor="#0288D1"
                         BorderWidth="3"
-                        Command="{Binding EliminarCommand}"
+                        Command="{Binding DeleteCommand}"
                         Grid.Column="0"
                         Grid.Row="0"
                         HorizontalOptions="FillAndExpand"
@@ -449,7 +473,7 @@
                     <Button
                         BackgroundColor="#0288D1"
                         BorderWidth="3"
-                        Command="{Binding CreateCommand}"
+                        Command="{Binding EditCommand}"
                         Grid.Column="1"
                         Grid.Row="0"
                         HorizontalOptions="FillAndExpand"

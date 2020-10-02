@@ -210,11 +210,13 @@ namespace EncuestaHorizonte.ViewModels
                     }
                     else
                     {*/
-                    this.IsRunning = false;
-                    this.Visible = false;
 
                     this.Email = string.Empty;
                     this.Password = string.Empty;
+
+
+                    this.IsRunning = false;
+                    this.Visible = false;
 
                     Application.Current.MainPage = new NavigationPage(new InicioPage());
                     //}

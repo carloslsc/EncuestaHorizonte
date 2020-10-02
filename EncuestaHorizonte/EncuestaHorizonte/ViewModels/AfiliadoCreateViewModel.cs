@@ -471,13 +471,13 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Facebook Vacío",
                     "Aceptar");
             }
-            else if (this.Observacion.Equals(string.Empty))
+            /*else if (this.Observacion.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Observación Vacío",
                     "Aceptar");
-            }
+            }*/
             else
             {
 
@@ -522,6 +522,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Curp = string.Empty;
                     this.Facebook = string.Empty;
                     this.Observacion = string.Empty;
+
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",
                         "Creación Exitosa",

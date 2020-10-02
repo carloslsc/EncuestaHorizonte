@@ -17,7 +17,6 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Attributes
-        private string backgroundColor;
         private bool isVisible;
         private bool isRunning;
         private ObservableCollection<Afiliado> afiliados;
@@ -35,12 +34,6 @@ namespace EncuestaHorizonte.ViewModels
         {
             get { return this.afi; }
             set { SetValue(ref this.afi, value);}
-        }
-
-        public string BackgroundColor
-        {
-            get { return this.backgroundColor; }
-            set { SetValue(ref this.backgroundColor, value); }
         }
 
         public bool IsVisible
@@ -61,20 +54,10 @@ namespace EncuestaHorizonte.ViewModels
         {
             //this.apiService = new ApiService();
             this.Afi = new Afiliado();
-            this.BackgroundColor = "Transparent";
         }
         #endregion
 
         #region Commands
-        /*
-        public ICommand EnviarCommand
-        {
-            get
-            {
-                return new RelayCommand(Enviar);
-            }
-        }*/
-
         public ICommand CapturarCommand
         {
             get
@@ -180,43 +163,23 @@ namespace EncuestaHorizonte.ViewModels
 
         private async void Capturar()
         {
-            try
-            {
-                //if (!this.Afi.Id.Equals(0))
-                //{
-                    //var mainViewModel = MainViewModel.GetInstance();
-                    //mainViewModel.AfiliadoCreate.TheEmployee = this.Afi;
-                    await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage(/*this.Afi*/));
-
-                    //Application.Current.MainPage = /*new NavigationPage(*/new AfiliadoCreatePage();//);
-
-                /*}
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert(
-                        "ERROR",
-                        "No ha seleccionado ningún empleado",
-                        "Aceptar");
-                }*/
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            this.Afi = null;//new Afiliado();
+            await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage());
         }
 
         private async void Editar()
         {
             if (!this.Afi.Id.Equals(0))
             {
-                await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(this.Afi));
+                var afiliado = this.Afi;
+                this.Afi = new Afiliado();
+                await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(afiliado));
             }
             else
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "No ha seleccionado ningún empleado",
+                    "No ha seleccionado ningún afiliado",
                     "Aceptar");
             }
         }

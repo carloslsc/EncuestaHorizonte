@@ -203,31 +203,10 @@ namespace EncuestaHorizonte.ViewModels
         #region Constructor
         public AfiliadoEditViewModel()
         {
+            this.file = null;
             this.helperAfiliado = new FullAfiliado();
-            this.Municipio = string.Empty;
-            this.Region = string.Empty;
-            this.Zona = string.Empty;
-            this.Seccion = string.Empty;
-            this.Casilla = string.Empty;
-            this.Promotor = string.Empty;
-            this.Comunidad = string.Empty;
-            this.Nombre = string.Empty;
-            this.NombreSegundo = string.Empty;
-            this.ApellidoPat = string.Empty;
-            this.ApellidoMat = string.Empty;
-            this.Domicilio = string.Empty;
-            this.TelefonoFijo = string.Empty;
-            this.TelefonoCelular = string.Empty;
-            this.TelefonoAlter = string.Empty;
-            this.Ocupacion = string.Empty;
-            this.Escolaridad = string.Empty;
-            this.Email = string.Empty;
-            this.NumIne = string.Empty;
-            this.ClaveIne = string.Empty;
-            this.Curp = string.Empty;
-            this.Facebook = string.Empty;
-            this.Observacion = string.Empty;
             this.ImageSource = "no_image";
+
         }
         #endregion
 
@@ -274,7 +253,46 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void Delete()
         {
+            var respuesta = await Application.Current.MainPage.DisplayAlert(
+                    "ALERTA",
+                    "¿Desea eliminar al afiliado?",
+                    "Aceptar",
+                    "Cancelar");
+            if (respuesta)
+            {
+                int rows = 0;
+                //var aff = this.Afiliado;
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    this.Afiliado.Id = int.Parse(Settings.Id);
+                    conn.CreateTable<Afiliado>();
+                    rows += conn.Delete(this.Afiliado);
+
+                    if (rows > 0)
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "EXITO",
+                            "El afiliado fue eliminado",
+                            "Aceptar");
             
+                        await Application.Current.MainPage.Navigation.PopAsync();
+                    }
+                }
+            }
+
+            
+            /*using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            {
+                conn.CreateTable<Afiliado>();
+                this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
+                    this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.Domicilio, this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter,
+                    this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, this.Facebook, this.Observacion, imageArray);
+                //rows += conn.Insert(this.Afiliado);
+            }*/
+            /*await Application.Current.MainPage.DisplayAlert(
+                "hola",
+                this.Afiliado,
+                "aceptar");/*/
         }
 
         public async void SelectImage()
@@ -487,8 +505,14 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
-
-                string id = null;
+                if (this.file != null)
+                {
+                    this.ImageSource = ImageSource.FromStream(() =>
+                    {
+                        var stream = file.GetStream();
+                        return stream;
+                    });
+                }
                 byte[] imageArray = null;
                 if (this.file != null)
                 {
@@ -498,40 +522,21 @@ namespace EncuestaHorizonte.ViewModels
                 int rows = 0;
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    //conn.CreateTable<Afiliado>();
+                    //var asfs = this.Afiliado;
+                    conn.CreateTable<Afiliado>();
+                    //string id = asfs.Id.ToString();
+                    string id = Settings.Id;
                     this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
                         this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.Domicilio, this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter,
                         this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, this.Facebook, this.Observacion, imageArray);
-                    //rows += conn.Insert(this.Afiliado);
+                    rows += conn.Update(this.Afiliado);
+                    
                 }
                 if (rows > 0)
                 {
-                    this.Municipio = string.Empty;
-                    this.Region = string.Empty;
-                    this.Zona = string.Empty;
-                    this.Seccion = string.Empty;
-                    this.Casilla = string.Empty;
-                    this.Promotor = string.Empty;
-                    this.Comunidad = string.Empty;
-                    this.Nombre = string.Empty;
-                    this.NombreSegundo = string.Empty;
-                    this.ApellidoPat = string.Empty;
-                    this.ApellidoMat = string.Empty;
-                    this.Domicilio = string.Empty;
-                    this.TelefonoFijo = string.Empty;
-                    this.TelefonoCelular = string.Empty;
-                    this.TelefonoAlter = string.Empty;
-                    this.Ocupacion = string.Empty;
-                    this.Escolaridad = string.Empty;
-                    this.Email = string.Empty;
-                    this.NumIne = string.Empty;
-                    this.ClaveIne = string.Empty;
-                    this.Curp = string.Empty;
-                    this.Facebook = string.Empty;
-                    this.Observacion = string.Empty;
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",
-                        "Creación Exitosa",
+                        "Edición Exitosa",
                         "Aceptar");
                 }
                 else
