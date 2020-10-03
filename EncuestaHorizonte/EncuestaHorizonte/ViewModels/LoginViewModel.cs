@@ -6,11 +6,16 @@ using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using EncuestaHorizonte.Helpers;
+using EncuestaHorizonte.Services;
 
 namespace EncuestaHorizonte.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
+        #region Services
+        private ApiService apiService;
+        #endregion
+
         #region Attributes
         private string email;
         private string password;
@@ -47,7 +52,7 @@ namespace EncuestaHorizonte.ViewModels
         #region Constructor
         public LoginViewModel()
         {
-            //this.apiService = new ApiService();
+            this.apiService = new ApiService();
             this.IsRunning = false;
             this.Visible = false;
         }
@@ -66,12 +71,12 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Login()
         {
-            
-            /*if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
+
+            if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
             {
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
             }
-            else*/ if (string.IsNullOrEmpty(this.Email))
+            else if (string.IsNullOrEmpty(this.Email))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -87,14 +92,14 @@ namespace EncuestaHorizonte.ViewModels
                     "Aceptar");
                 return;
             }
-            /*else if (this.Email.Equals(Settings.AdminU) && this.Password.Equals(Settings.AdminP))
+            else if (this.Email.Equals(Settings.AdminU) && this.Password.Equals(Settings.AdminP))
             {
                 this.Visible = true;
                 this.IsRunning = true;
                 this.Visible = false;
                 this.IsRunning = false;
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
-            }*/
+            }
             else if (!this.Password.Equals("1") || !this.Email.Equals("1")/*this.Password.Equals(Settings.Password) || !this.Email.Equals(Settings.Usuario)*/)
             {
                 await Application.Current.MainPage.DisplayAlert(

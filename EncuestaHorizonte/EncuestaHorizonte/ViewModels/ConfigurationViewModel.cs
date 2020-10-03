@@ -1,7 +1,12 @@
 ﻿using EncuestaHorizonte.Helpers;
+using EncuestaHorizonte.Models;
+using EncuestaHorizonte.Services;
 using GalaSoft.MvvmLight.Command;
+using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -12,7 +17,7 @@ namespace EncuestaHorizonte.ViewModels
     public class ConfigurationViewModel : BaseViewModel
     {
         #region Services
-        //private ApiService apiService;
+        private ApiService apiService;
         #endregion
 
         #region Attributes
@@ -21,12 +26,17 @@ namespace EncuestaHorizonte.ViewModels
         //private string contrasena;
         private string servidor;
         //private int hora;
+        private ObservableCollection<string> lugares;
+        private int indexLu;
+        private string lugarSelected;
         private string adminP;
         private string adminU;
         private bool isRunning;
         private bool isVisible;
         private bool running;
         private bool visible;
+        private bool runningLugar;
+        private bool visibleLugar;
         #endregion
 
         #region Properties
@@ -34,6 +44,24 @@ namespace EncuestaHorizonte.ViewModels
         {
             get { return this.area; }
             set { SetValue(ref this.area, value); }
+        }
+
+        public ObservableCollection<string> Lugares
+        {
+            get { return this.lugares; }
+            set { SetValue(ref this.lugares, value); }
+        }
+
+        public int IndexLu
+        {
+            get { return this.indexLu; }
+            set { SetValue(ref this.indexLu, value); }
+        }
+
+        public string LugarSelected
+        {
+            get { return this.lugarSelected; }
+            set { SetValue(ref this.lugarSelected, value); }
         }
 
         public string Servidor
@@ -72,6 +100,18 @@ namespace EncuestaHorizonte.ViewModels
             set { SetValue(ref this.running, value); }
         }
 
+        public bool VisibleLugar
+        {
+            get { return this.visibleLugar; }
+            set { SetValue(ref this.visibleLugar, value); }
+        }
+
+        public bool RunningLugar
+        {
+            get { return this.runningLugar; }
+            set { SetValue(ref this.runningLugar, value); }
+        }
+
         public bool IsVisible
         {
             get { return this.isVisible; }
@@ -82,15 +122,16 @@ namespace EncuestaHorizonte.ViewModels
         #region Constructor
         public ConfigurationViewModel()
         {
-            //this.apiService = new ApiService();
-            if (Settings.Area.Equals(string.Empty))
+            this.apiService = new ApiService();
+            /*if (Settings.Area.Equals(string.Empty))
             {
-                this.Area = 0;
+                //this.Area = 0;
             }
             else
             {
-                this.Area = int.Parse(Settings.Area);
-            }
+                //this.Area = int.Parse(Settings.Area);
+            }*/
+            //this.Lugar = Settings.Area;
             this.Servidor = Settings.Servidor;
             this.AdminU = Settings.AdminU;
             this.AdminP = Settings.AdminP;
@@ -98,6 +139,8 @@ namespace EncuestaHorizonte.ViewModels
             this.Running = false;
             this.IsVisible = false;
             this.IsRunning = false;
+            //this.Lugares = new ObservableCollection<string>();
+            //this.LugarSelected = Settings.Area;
         }
         #endregion
 
@@ -110,11 +153,19 @@ namespace EncuestaHorizonte.ViewModels
             }
         }
 
-        public ICommand LotesCommand
+        public ICommand UsuariosCommand
         {
             get
             {
                 return new RelayCommand(Usuario);
+            }
+        }
+
+        public ICommand LugaresCommand
+        {
+            get
+            {
+                return new RelayCommand(LugarMethod);
             }
         }
         #endregion
@@ -122,7 +173,7 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Actualizar()
         {
-            if (this.Area.Equals(0))
+            if (/*this.Area.Equals(0)*/this.LugarSelected.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -150,13 +201,14 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Contraseña del Administrador Vacío",
                     "Aceptar");
             }
+            /*
             else if (!Regex.IsMatch(this.Servidor, @"^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$"))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Error en la Manera de Escribir el Servidor",
                     "Aceptar");
-            }
+            }*/
             /*else if (this.AdminU.Equals(this.Usuario))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -166,14 +218,28 @@ namespace EncuestaHorizonte.ViewModels
             }*/
             else
             {
-                this.Visible = true;
-                this.Running = true;
-                Settings.Area = string.Format("{0}", this.Area);
+                this.Visible = false;
+                this.Running = false;
+                //Settings.Area = this.LugarSelected;
+                //Settings.Area = string.Format("{0}", this.Area);
                 //Settings.Usuario = this.Usuario;
                 //Settings.Password = this.Contrasena;
+                //Settings.Servidor = this.Servidor;
+                /*this.Servidor = Settings.Servidor;
+                this.AdminU = Settings.AdminU;
+                this.AdminP = Settings.AdminP;
+                this.LugarSelected = Settings.Area;
+                */
                 Settings.Servidor = this.Servidor;
                 Settings.AdminU = this.AdminU;
                 Settings.AdminP = this.AdminP;
+                Settings.Area = this.LugarSelected;
+                await Application.Current.MainPage.DisplayAlert(
+                    "EXITO",
+                    Settings.Area,
+                    "Aceptar");
+                //Settings.AdminU = this.AdminU;
+                //Settings.AdminP = this.AdminP;
                 await Application.Current.MainPage.DisplayAlert(
                     "EXITO",
                     "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
@@ -188,8 +254,8 @@ namespace EncuestaHorizonte.ViewModels
             this.IsVisible = true;
             this.IsRunning = true;
 
-            //var connection = await this.apiService.CheckConnection();
-            /*
+            var connection = await this.apiService.CheckConnection();
+            
             if (!connection.IsSuccess)
             {
                 this.Running = false;
@@ -203,7 +269,7 @@ namespace EncuestaHorizonte.ViewModels
             else
             {
                 //Utilizar el servidor de settings y el nombre de la fecha actual
-                var response = await this.apiService.GetList<DataLotes>("http://" + Settings.Servidor + "/finca_ban/json/", "jdlotes.json");
+                var response = await this.apiService.GetList<DataUsuario>("https://" + Settings.Servidor + "/controladores/", "xamarin.controlador.php");
 
                 if (!response.IsSuccess)
                 {
@@ -216,27 +282,39 @@ namespace EncuestaHorizonte.ViewModels
 
                 }
 
-                var list = (List<DataLotes>)response.Result;
+                var list = (List<DataUsuario>)response.Result;
                 //var list = new List<DataLotes>(lis);
                 int rows = 0;
 
+                int area = 0;
+
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    conn.DropTable<Lotes>();
-                    conn.CreateTable<Lotes>();
+                    //conn.CreateTable<Usuarios>();
+                    var tabla = conn.Table<Lugares>().Where(l => l.Lugar == Settings.Area).FirstOrDefault();
+                    area = tabla.Id;
+                }
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    conn.DropTable<Usuarios>();
+                    conn.CreateTable<Usuarios>();
                     for (int i = 0; i < list.Count; i++)
                     {
-                        Lotes Lote = new Lotes()
+                        if (list[i].Id_Lugar.Equals(area))
                         {
-                            IdArea = list[i].IdArea,
-                            IdCable = list[i].IdCable,
-                            IdLote = list[i].IdLote,
-                            TamLote = list[i].TamLote,
-                            Sel = 0,
-                        };
-                        rows += conn.Insert(Lote);
+                            Usuarios Usuario = new Usuarios()
+                            {
+                                Nombre = list[i].Nombre,
+                                Usuario = list[i].Usuario,
+                                Password = list[i].Password,
+                                Id_Lugar = list[i].Id_Lugar
+                            };
+                            rows += conn.Insert(Usuario);
+                        }
                     }
                 }
+
                 this.Running = false;
                 this.IsVisible = false;
 
@@ -255,7 +333,88 @@ namespace EncuestaHorizonte.ViewModels
                         "Aceptar");
                 }
             }
-            */
+        }
+
+        public async void LugarMethod()
+        {
+            this.VisibleLugar = true;
+            this.RunningLugar = true;
+
+            var connection = await this.apiService.CheckConnection();
+
+            if (!connection.IsSuccess)
+            {
+                this.RunningLugar = false;
+                this.VisibleLugar = false;
+                await Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    connection.Message,
+                    "Aceptar");
+                return;
+            }
+            else
+            {
+                //Utilizar el servidor de settings y el nombre de la fecha actual
+                var response = await this.apiService.GetList<DataLugar>("https://" + Settings.Servidor + "/controladores/", "lugar.controlador.php");
+
+                if (!response.IsSuccess)
+                {
+                    this.RunningLugar = false;
+                    this.VisibleLugar = false;
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        response.Message,
+                        "Aceptar");
+
+                }
+
+                var list = (List<DataLugar>)response.Result;
+                //var list = new List<DataLotes>(lis);
+                int rows = 0;
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    conn.DropTable<Lugares>();
+                    conn.CreateTable<Lugares>();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Lugares Lugar = new Lugares()
+                        {
+                            Id = list[i].Id_Lugar,
+                            Lugar = list[i].Nombre_Lugar
+                        };
+                        rows += conn.Insert(Lugar);
+                    }
+                }
+
+                this.Lugares = new ObservableCollection<string>();
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    var lista = conn.Table<Lugares>().ToList();
+                    
+                    foreach (var item in lista)
+                        this.Lugares.Add(item.Lugar);
+                }
+
+                this.RunningLugar = false;
+                this.VisibleLugar = false;
+
+                if (rows > 0)
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "EXITO",
+                        "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
+                        "Aceptar");
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        "Los valores recibidos no se almacenaron en el dispositivo",
+                        "Aceptar");
+                }
+            }
         }
         #endregion
     }

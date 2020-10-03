@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             xmlns:costum="clr-namespace:EncuestaHorizonte.Costum;assembly=EncuestaHorizonte"
              Title="Configuración"
              x:Class="EncuestaHorizonte.Views.ConfigurationPage"
              BackgroundColor="White">
@@ -10,6 +11,30 @@
             BindingContext="{Binding Configuration}">
             <StackLayout
                 Padding="20">
+                <Frame
+                    BackgroundColor="White"
+                    Padding="10"
+                    Margin="0, 0, 0, 10">
+                    <Label
+                        FontSize="20"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="PARA PODER ACTUALIZAR LOS LUGARES PRESIONE EL SIGUIENTE BOTON"
+                        TextColor="Black"
+                        VerticalOptions="CenterAndExpand"/>
+                </Frame>
+                <ActivityIndicator
+                    IsVisible="{Binding VisibleLugar, Mode=TwoWay}"
+                    IsRunning="{Binding RunningLugar, Mode=TwoWay}"
+                    VerticalOptions="CenterAndExpand"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding LugaresCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Actualizar Lugares"
+                    TextColor="White"/>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>
@@ -26,14 +51,24 @@
                         Grid.Column="0"
                         Grid.Row="0"
                         FontSize="Large"
-                        Text="AREA"
+                        Text="LUGAR"
                         TextColor="Black"
                         VerticalOptions="CenterAndExpand"/>
                     <Frame
                         Grid.Column="1"
                         Grid.Row="0"
                         Padding="10, 1, 10, 1">
-                        <Entry
+                        <costum:PickerRender
+                            x:Name="Lugar"
+                            FontSize="20"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            ItemsSource="{Binding Lugares, Mode=TwoWay}"
+                            SelectedIndex="{Binding IndexLu, Mode=TwoWay}"
+                            SelectedItem="{Binding LugarSelected, Mode=TwoWay}"
+                            TextColor="Black"
+                            VerticalOptions="EndAndExpand"/>
+                        <!--<Entry
                             VerticalOptions="CenterAndExpand"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
@@ -41,7 +76,7 @@
                             PlaceholderColor="Black"
                             Keyboard="Numeric"
                             Text="{Binding Area, Mode=TwoWay}"
-                            TextColor="Black"/>
+                            TextColor="Black"/>-->
                     </Frame>
                     <Label
                         Grid.Column="0"
@@ -58,8 +93,8 @@
                             VerticalOptions="CenterAndExpand"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            Placeholder="255.255.255.255"
-                            PlaceholderColor="Black"
+                            Placeholder="Ej. horizonte2021.com.mx"
+                            PlaceholderColor="Gray"
                             Text="{Binding Servidor,Mode=TwoWay}"
                             TextColor="Black"/>
                     </Frame>
@@ -79,7 +114,7 @@
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Placeholder="Usuario Admin"
-                            PlaceholderColor="Black"
+                            PlaceholderColor="Gray"
                             Text="{Binding AdminU,Mode=TwoWay}"
                             TextColor="Black"/>
                     </Frame>
@@ -99,7 +134,7 @@
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Placeholder="Contraseña Admin"
-                            PlaceholderColor="Black"
+                            PlaceholderColor="Gray"
                             IsPassword="true"
                             Text="{Binding AdminP,Mode=TwoWay}"
                             TextColor="Black"/>
@@ -141,6 +176,8 @@
                     HorizontalOptions="FillAndExpand"
                     Text="Actualizar Usuarios"
                     TextColor="White"/>
+
+                
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
