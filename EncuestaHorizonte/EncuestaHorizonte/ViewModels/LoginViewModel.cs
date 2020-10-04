@@ -7,6 +7,9 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using EncuestaHorizonte.Helpers;
 using EncuestaHorizonte.Services;
+using SQLite;
+using EncuestaHorizonte.Models;
+using CryptSharp;
 
 namespace EncuestaHorizonte.ViewModels
 {
@@ -74,6 +77,9 @@ namespace EncuestaHorizonte.ViewModels
 
             if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
             {
+
+                this.Email = string.Empty;
+                this.Password = string.Empty;
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
             }
             else if (string.IsNullOrEmpty(this.Email))
@@ -96,126 +102,49 @@ namespace EncuestaHorizonte.ViewModels
             {
                 this.Visible = true;
                 this.IsRunning = true;
+                this.Email = string.Empty;
+                this.Password = string.Empty;
                 this.Visible = false;
                 this.IsRunning = false;
                 await Application.Current.MainPage.Navigation.PushAsync(new ConfigurationPage());
             }
-            else if (!this.Password.Equals("1") || !this.Email.Equals("1")/*this.Password.Equals(Settings.Password) || !this.Email.Equals(Settings.Usuario)*/)
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Usuario y/o Contraseña Invalidos",
-                    "Aceptar");
-                return;
-            }
             else
             {
-                this.Visible = true;
-                this.IsRunning = true;
+                byte[] PasswordBytes = Encoding.ASCII.GetBytes(this.Password);
+                string cryptedPassword = Crypter.Blowfish.Crypt(PasswordBytes, "$2a$07$g0uO0D9wPLBqFWNLwzO5qu");
 
-                /*DateTime Fecha = DateTime.UtcNow;
-                int hora = Fecha.Hour - 6;
-                int min = Fecha.Minute;
-                int rows = 0;
-                if (hora.Equals(int.Parse(Settings.Hora)))
+                int validacion = 0;
+
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    var connection = await this.apiService.CheckConnection();
+                    var usuarios = conn.Table<Usuarios>().ToList();
 
-                    if (!connection.IsSuccess)
+                    foreach (var item in usuarios)
                     {
-                        this.IsRunning = false;
-                        this.Visible = false;
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Error",
-                            connection.Message,
-                            "Aceptar");
-                        return;
-                    }
-                    else
-                    {
-                        DateTime fecha = Fecha.Date;
-                        var response = await this.apiService.GetList<Data>("http://" + Settings.Servidor + "/finca_ban/json/enviados_a_tablet/", "jd" + fecha.ToString("yyyyMMdd") + ".json");
-
-                        if (!response.IsSuccess)
+                        
+                        if (item.Password.Equals(cryptedPassword) && item.Usuario.Equals(this.Email))
                         {
-                            this.IsRunning = false;
-                            this.Visible = false;
-                            await Application.Current.MainPage.DisplayAlert(
-                                "ERROR",
-                                response.Message,
-                                "Aceptar");
-
-                        }
-                        else
-                        {
-                            var list = (List<Data>)response.Result;
-
-                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                            {
-                                conn.DropTable<Empleado>();
-                                conn.DropTable<Location>();
-                                conn.CreateTable<Empleado>();
-                                for (int i = 0; i < list.Count; i++)
-                                {
-                                    Empleado Emp = new Empleado()
-                                    {
-                                        IdCaporal = list[i].IdCaporal,
-                                        NomCap = list[i].NomCap + " " + list[i].Capp + " " + list[i].Capm,
-                                        Cnsle = list[i].Cnsle,
-                                        IdEmp = list[i].IdEmp,
-                                        NomEmp = list[i].NomEmp + " " + list[i].App + " " + list[i].Apm,
-                                        IdLab = list[i].IdLab,
-                                        DescLab = list[i].DescLab,
-                                        IdArea = list[i].IdArea,
-                                        Cable = 0,
-                                        Lote = 0,
-                                        Cantidad = 0,
-                                        FecExeLab = list[i].FecExeLab,
-                                        Dup = 0,
-                                    };
-                                    if (Emp.IdArea.Equals(int.Parse(Settings.Area)))
-                                    {
-                                        rows += conn.Insert(Emp);
-                                    }
-                                }
-                            }
-                            if (rows.Equals(0))
-                            {
-                                this.IsRunning = false;
-                                this.Visible = false;
-                                await Application.Current.MainPage.DisplayAlert(
-                                    "ERROR",
-                                    "Los valores recibidos no se almacenaron en el dispositivo",
-                                    "Aceptar");
-                            }
-                            else
-                            {
-                                this.IsRunning = false;
-                                this.Visible = false;
-
-                                this.Email = string.Empty;
-                                this.Password = string.Empty;
-
-                                Application.Current.MainPage = new NavigationPage(new EmployeePage());
-                                //}
-                            }
+                            validacion++;
                         }
                     }
                 }
+                if (/*!this.Password.Equals(Settings.Password) || !this.Email.Equals(Settings.Usuario)*/validacion.Equals(0))
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        "Usuario y/o Contraseña Invalidos",
+                        "Aceptar");
+                    return;
+                }
                 else
                 {
-                    /*if (rows.Equals(0))
-                    {
-                        this.IsRunning = false;
-                        this.Visible = false;
-                        await Application.Current.MainPage.DisplayAlert(
-                            "ERROR",
-                            "Los valores recibidos no se almacenaron en el dispositivo",
-                            "Aceptar");
-                    }
-                    else
-                    {*/
+                    Settings.Usuario = this.Email;
+                    Settings.Password = this.Password;
 
+                    this.Visible = true;
+                    this.IsRunning = true;
+
+                    
                     this.Email = string.Empty;
                     this.Password = string.Empty;
 
@@ -224,8 +153,9 @@ namespace EncuestaHorizonte.ViewModels
                     this.Visible = false;
 
                     Application.Current.MainPage = new NavigationPage(new InicioPage());
-                    //}
-                //}
+                    
+                }
+                
             }
         }
         #endregion
