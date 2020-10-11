@@ -241,8 +241,9 @@ namespace EncuestaHorizonte.Views
                 ((ListView)sender).SelectedItem = null;
 
                 Settings.Id = string.Empty;
-                Settings.Usuario = string.Empty;
-                Settings.Password = string.Empty;
+                Settings.Nombre = string.Empty;
+                //Settings.Usuario = string.Empty;
+                //Settings.Password = string.Empty;
 
                 if (respuesta)
                 {

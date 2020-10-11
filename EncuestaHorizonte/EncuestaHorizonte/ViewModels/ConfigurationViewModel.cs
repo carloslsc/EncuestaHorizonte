@@ -22,10 +22,7 @@ namespace EncuestaHorizonte.ViewModels
 
         #region Attributes
         private int area;
-        //private string usuario;
-        //private string contrasena;
         private string servidor;
-        //private int hora;
         private ObservableCollection<string> lugares;
         private int indexLu;
         private string lugarSelected;
@@ -123,15 +120,6 @@ namespace EncuestaHorizonte.ViewModels
         public ConfigurationViewModel()
         {
             this.apiService = new ApiService();
-            /*if (Settings.Area.Equals(string.Empty))
-            {
-                //this.Area = 0;
-            }
-            else
-            {
-                //this.Area = int.Parse(Settings.Area);
-            }*/
-            //this.Lugar = Settings.Area;
             this.Servidor = Settings.Servidor;
             this.AdminU = Settings.AdminU;
             this.AdminP = Settings.AdminP;
@@ -139,8 +127,6 @@ namespace EncuestaHorizonte.ViewModels
             this.Running = false;
             this.IsVisible = false;
             this.IsRunning = false;
-            //this.Lugares = new ObservableCollection<string>();
-            //this.LugarSelected = Settings.Area;
         }
         #endregion
 
@@ -173,7 +159,13 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Actualizar()
         {
-            if (/*this.Area.Equals(0)*/this.LugarSelected.Equals(string.Empty))
+            //Se activa el ActivityIndicator
+            this.Visible = true;
+            this.Running = true;
+
+            //Validaciones
+            //Se validan que los campos no esten vacios
+            if (this.LugarSelected.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -201,65 +193,50 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Contraseña del Administrador Vacío",
                     "Aceptar");
             }
-            /*
-            else if (!Regex.IsMatch(this.Servidor, @"^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$"))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Error en la Manera de Escribir el Servidor",
-                    "Aceptar");
-            }*/
-            /*else if (this.AdminU.Equals(this.Usuario))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Usuario y Usuario del Administrador no deben ser iguales",
-                    "Aceptar");
-            }*/
             else
             {
-                this.Visible = false;
-                this.Running = false;
-                //Settings.Area = this.LugarSelected;
-                //Settings.Area = string.Format("{0}", this.Area);
-                //Settings.Usuario = this.Usuario;
-                //Settings.Password = this.Contrasena;
-                //Settings.Servidor = this.Servidor;
-                /*this.Servidor = Settings.Servidor;
-                this.AdminU = Settings.AdminU;
-                this.AdminP = Settings.AdminP;
-                this.LugarSelected = Settings.Area;
-                */
+                //Se obtiene el Id del lugar
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    var tabla = conn.Table<Lugares>().Where(l => l.Lugar == this.LugarSelected).FirstOrDefault();
+                    Settings.IdArea = tabla.Id.ToString();
+                }
+
+                //Se copian los datos ingresados a una clase de persistencia llamada Settings
                 Settings.Servidor = this.Servidor;
                 Settings.AdminU = this.AdminU;
                 Settings.AdminP = this.AdminP;
                 Settings.Area = this.LugarSelected;
-                await Application.Current.MainPage.DisplayAlert(
-                    "EXITO",
-                    Settings.Area,
-                    "Aceptar");
-                //Settings.AdminU = this.AdminU;
-                //Settings.AdminP = this.AdminP;
+
+                //Se desactiva el ActivityIndicator
+                this.Visible = false;
+                this.Running = false;
+
+                //El usuario recibe una mensaje de exito
                 await Application.Current.MainPage.DisplayAlert(
                     "EXITO",
                     "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
                     "Aceptar");
-                this.Visible = false;
-                this.Running = false;
             }
         }
 
         public async void Usuario()
         {
+            //Se activa el ActivityIndicator
             this.IsVisible = true;
             this.IsRunning = true;
 
+            //Se solicita una comunicacion con el servidor
             var connection = await this.apiService.CheckConnection();
             
+            //Se verifica la comunicacion con el servidor
             if (!connection.IsSuccess)
             {
-                this.Running = false;
+                //Se desactiva el ActivityIndicator
+                this.IsRunning = false;
                 this.IsVisible = false;
+
+                //Se muestra al usuario un mensaje de error
                 await Application.Current.MainPage.DisplayAlert(
                     "Error",
                     connection.Message,
@@ -268,13 +245,17 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
-                //Utilizar el servidor de settings y el nombre de la fecha actual
+                //Se solicita al servidor la lista de usuarios
                 var response = await this.apiService.GetList<DataUsuario>("https://" + Settings.Servidor + "/controladores/", "xamarin.controlador.php");
 
+                //Se verifica la respuesta del servidor
                 if (!response.IsSuccess)
                 {
-                    this.Running = false;
+                    //Se desactiva el ActivityIndicator
+                    this.IsRunning = false;
                     this.IsVisible = false;
+
+                    //Se muestra al usuario un mensaje de error
                     await Application.Current.MainPage.DisplayAlert(
                         "ERROR",
                         response.Message,
@@ -282,27 +263,26 @@ namespace EncuestaHorizonte.ViewModels
 
                 }
 
+                //Se castea la lista de usuarios obtenidas del servidor para su manipulación dentro del códgio
                 var list = (List<DataUsuario>)response.Result;
-                //var list = new List<DataLotes>(lis);
+
+                //Banderas creadas para el funcionamiento del código
                 int rows = 0;
 
-                int area = 0;
-
+                //Se crean los usuarios en sqlite segun su lugar
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    //conn.CreateTable<Usuarios>();
-                    var tabla = conn.Table<Lugares>().Where(l => l.Lugar == Settings.Area).FirstOrDefault();
-                    area = tabla.Id;
-                }
-
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                {
+                    //Reseteo de la tabla
                     conn.DropTable<Usuarios>();
                     conn.CreateTable<Usuarios>();
+
+                    //Inserción de usuarios
                     for (int i = 0; i < list.Count; i++)
                     {
-                        if (list[i].Id_Lugar.Equals(area))
+                        //Verificación de lugar
+                        if (list[i].Id_Lugar.Equals(Settings.IdArea))
                         {
+                            //Creación del modelo usuario
                             Usuarios Usuario = new Usuarios()
                             {
                                 Id = list[i].Id_Usuario,
@@ -311,14 +291,17 @@ namespace EncuestaHorizonte.ViewModels
                                 Password = list[i].Password,
                                 Id_Lugar = list[i].Id_Lugar
                             };
+                            //Inserción a la tabla usuario
                             rows += conn.Insert(Usuario);
                         }
                     }
                 }
 
+                //Se desactiva el ActivityIndicator
                 this.Running = false;
                 this.IsVisible = false;
 
+                //Mensajes de exito o error;
                 if (rows > 0)
                 {
                     await Application.Current.MainPage.DisplayAlert(
@@ -338,15 +321,21 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void LugarMethod()
         {
+            //Se activa el ActivityIndicator
             this.VisibleLugar = true;
             this.RunningLugar = true;
 
+            //Se solicita conexion al servidor
             var connection = await this.apiService.CheckConnection();
 
+            //Se verifica la conexion al servidor
             if (!connection.IsSuccess)
             {
+                //Se desactiva el ActivityIndicator
                 this.RunningLugar = false;
                 this.VisibleLugar = false;
+                
+                //Mensaje para el usuario
                 await Application.Current.MainPage.DisplayAlert(
                     "Error",
                     connection.Message,
@@ -355,13 +344,17 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
-                //Utilizar el servidor de settings y el nombre de la fecha actual
+                //Se solicita la lista de lugares
                 var response = await this.apiService.GetList<DataLugar>("https://" + Settings.Servidor + "/controladores/", "lugar.controlador.php");
 
+                //Se verifica el correcto recibimiento de los lugares
                 if (!response.IsSuccess)
                 {
+                    //Se desactiva el ActivityIndicator
                     this.RunningLugar = false;
                     this.VisibleLugar = false;
+
+                    //Mensaje para el usuario
                     await Application.Current.MainPage.DisplayAlert(
                         "ERROR",
                         response.Message,
@@ -369,14 +362,23 @@ namespace EncuestaHorizonte.ViewModels
 
                 }
 
+                //Casteo de la respuesta del servidor para la manipulación dentro del código
                 var list = (List<DataLugar>)response.Result;
-                //var list = new List<DataLotes>(lis);
+
+                //Banderas creadas
                 int rows = 0;
 
+                //Reseteo de la instancia de lugares en el XAML
+                this.Lugares = new ObservableCollection<string>();
+
+                //Agregar los lugares a base de datos
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
+                    //Reseteo de la tabla
                     conn.DropTable<Lugares>();
                     conn.CreateTable<Lugares>();
+
+                    //Inserción de los lugares a la tabla y a la instancia de XAML
                     for (int i = 0; i < list.Count; i++)
                     {
                         Lugares Lugar = new Lugares()
@@ -384,23 +386,18 @@ namespace EncuestaHorizonte.ViewModels
                             Id = list[i].Id_Lugar,
                             Lugar = list[i].Nombre_Lugar
                         };
+
+                        this.Lugares.Add(list[i].Nombre_Lugar);
+
                         rows += conn.Insert(Lugar);
                     }
                 }
 
-                this.Lugares = new ObservableCollection<string>();
-
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                {
-                    var lista = conn.Table<Lugares>().ToList();
-                    
-                    foreach (var item in lista)
-                        this.Lugares.Add(item.Lugar);
-                }
-
+                //Se desactiva el ActivityIndicator
                 this.RunningLugar = false;
                 this.VisibleLugar = false;
 
+                //Mensajes de exito y error
                 if (rows > 0)
                 {
                     await Application.Current.MainPage.DisplayAlert(
