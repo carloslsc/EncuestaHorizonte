@@ -305,6 +305,7 @@ namespace EncuestaHorizonte.ViewModels
                         {
                             Usuarios Usuario = new Usuarios()
                             {
+                                Id = list[i].Id_Usuario,
                                 Nombre = list[i].Nombre,
                                 Usuario = list[i].Usuario,
                                 Password = list[i].Password,

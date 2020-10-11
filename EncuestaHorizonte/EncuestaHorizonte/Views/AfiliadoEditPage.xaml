@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EncuestaHorizonte.Views.AfiliadoEditPage"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             xmlns:costum="clr-namespace:EncuestaHorizonte.Costum;assembly=EncuestaHorizonte"
              Title="Editar Afiliado"
              BackgroundColor="White">
     <ContentPage.Content>
@@ -13,7 +14,7 @@
                 <Image 
                     Aspect="AspectFill"
                     x:Name="Image"
-                    Source="{Binding ImageSource}"
+                    Source="{Binding FotoSource, Mode=TwoWay}"
                     HorizontalOptions="Center"
                     HeightRequest="150"
                     WidthRequest="140"
@@ -30,6 +31,167 @@
                     />
                 <Label
                     FontSize="15"
+                    Text="Nombre"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        x:Name="Nombre"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Nombre, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Nombre"
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Segundo Nombre"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        x:Name="NombreSegundo"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding NombreSegundo, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Segundo Nombre"
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Apellido Paterno"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        x:Name="ApellidoPat"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding ApellidoPat, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Apellido Paterno"
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Apellido Materno"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        x:Name="ApellidoMat"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding ApellidoMat, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Apellido Materno"
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Sexo"
+                    TextColor="Black"
+                    VerticalOptions="CenterAndExpand"/>
+                <Frame
+                    Padding="10, 1, 10, 1">
+                    <costum:PickerRender
+                        x:Name="Sexo"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{Binding Sexos, Mode=TwoWay}"
+                        SelectedItem="{Binding SexoSelected, Mode=TwoWay}"
+                        TextColor="Black"
+                        Title="Seleccione un Sexo"
+                        TitleColor="White"
+                        VerticalOptions="EndAndExpand"/>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Edad"
+                    TextColor="Black"
+                    VerticalOptions="Center"/>
+                <Frame
+                        Padding="10, 0, 10, 0">
+                    <Entry
+                        x:Name="Edad"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
+                        Text="{Binding Edad, Mode=TwoWay}"
+                        TextColor="Black"
+                        Placeholder="Edad"
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand"/>
+                </Frame>
+                <Label
+                    FontSize="15"
+                    Text="Estado Civil"
+                    TextColor="Black"
+                    VerticalOptions="CenterAndExpand"/>
+                <Frame
+                    Padding="10, 1, 10, 1">
+                    <costum:PickerRender
+                        x:Name="EstadoCivil"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{Binding EstadosCiviles, Mode=TwoWay}"
+                        SelectedItem="{Binding EstadoCivilSelected, Mode=TwoWay}"
+                        TextColor="Black"
+                        Title="Seleccione un Estado Civil"
+                        TitleColor="White"
+                        VerticalOptions="EndAndExpand"/>
+                </Frame>
+                <Label
+                    FontSize="15"
                     Text="Municipio"
                     TextColor="Black"
                     VerticalOptions="Center"/>
@@ -43,8 +205,16 @@
                         Text="{Binding Municipio, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Municipio"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -62,7 +232,7 @@
                         Text="{Binding Region, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Región"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -81,7 +251,7 @@
                         Text="{Binding Zona, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Zona"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -100,7 +270,7 @@
                         Text="{Binding Seccion, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Sección"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -118,8 +288,16 @@
                         Text="{Binding Casilla, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Casilla"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeCharacter</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -133,11 +311,11 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
-                        Keyboard="Numeric"
+                        Keyboard="Telephone"
                         Text="{Binding Promotor, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Promotor"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -155,80 +333,16 @@
                         Text="{Binding Comunidad, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Comunidad"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
-                </Frame>
-                <Label
-                    FontSize="15"
-                    Text="Nombre"
-                    TextColor="Black"
-                    VerticalOptions="Center"/>
-                <Frame
-                        Padding="10, 0, 10, 0">
-                    <Entry
-                        x:Name="Nombre"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="FillAndExpand"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding Nombre, Mode=TwoWay}"
-                        TextColor="Black"
-                        Placeholder="Nombre"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
-                </Frame>
-                <Label
-                    FontSize="15"
-                    Text="Segundo Nombre"
-                    TextColor="Black"
-                    VerticalOptions="Center"/>
-                <Frame
-                        Padding="10, 0, 10, 0">
-                    <Entry
-                        x:Name="NombreSegundo"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="FillAndExpand"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding NombreSegundo, Mode=TwoWay}"
-                        TextColor="Black"
-                        Placeholder="Segundo Nombre"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
-                </Frame>
-                <Label
-                    FontSize="15"
-                    Text="Apellido Paterno"
-                    TextColor="Black"
-                    VerticalOptions="Center"/>
-                <Frame
-                        Padding="10, 0, 10, 0">
-                    <Entry
-                        x:Name="ApellidoPat"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="FillAndExpand"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding ApellidoPat, Mode=TwoWay}"
-                        TextColor="Black"
-                        Placeholder="Apellido Paterno"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
-                </Frame>
-                <Label
-                    FontSize="15"
-                    Text="Apellido Materno"
-                    TextColor="Black"
-                    VerticalOptions="Center"/>
-                <Frame
-                        Padding="10, 0, 10, 0">
-                    <Entry
-                        x:Name="ApellidoMat"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="FillAndExpand"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding ApellidoMat, Mode=TwoWay}"
-                        TextColor="Black"
-                        Placeholder="Apellido Materno"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -245,8 +359,16 @@
                         Text="{Binding Domicilio, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Domicilio"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -264,7 +386,7 @@
                         Text="{Binding TelefonoFijo, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Teléfono Fijo"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -283,7 +405,7 @@
                         Text="{Binding TelefonoCelular, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Teléfono Celular"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -302,18 +424,28 @@
                         Text="{Binding TelefonoAlter, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="(Teléfono alterno o radio)"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
                     FontSize="15"
-                    Text="Ocúpación"
+                    Text="Ocupación"
                     TextColor="Black"
                     VerticalOptions="Center"/>
                 <Frame
                         Padding="10, 0, 10, 0">
-                    <Entry
+                    <costum:PickerRender
                         x:Name="Ocupacion"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{Binding Ocupaciones, Mode=TwoWay}"
+                        SelectedItem="{Binding Ocupacion, Mode=TwoWay}"
+                        TextColor="Black"
+                        Title="Seleccione una ocupación"
+                        TitleColor="White"
+                        VerticalOptions="EndAndExpand"/>
+                    <!--<Entry
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
@@ -321,7 +453,7 @@
                         TextColor="Black"
                         Placeholder="Ocupación"
                         PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        VerticalOptions="EndAndExpand"/>-->
                 </Frame>
                 <Label
                     FontSize="15"
@@ -330,16 +462,26 @@
                     VerticalOptions="Center"/>
                 <Frame
                         Padding="10, 0, 10, 0">
-                    <Entry
+                    <costum:PickerRender
                         x:Name="Escolaridad"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{Binding Escolaridades, Mode=TwoWay}"
+                        SelectedItem="{Binding Escolaridad, Mode=TwoWay}"
+                        TextColor="Black"
+                        Title="Seleccione una escolaridad"
+                        TitleColor="White"
+                        VerticalOptions="EndAndExpand"/>
+                    <!--<Entry
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Escolaridad, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Escolaridad"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand"/>-->
                 </Frame>
                 <Label
                     FontSize="15"
@@ -357,7 +499,7 @@
                         Text="{Binding Email, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Coreo Electrónico"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -376,7 +518,7 @@
                         Text="{Binding NumIne, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Número de INE"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -394,8 +536,16 @@
                         Text="{Binding ClaveIne, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Clave INE"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeCharacter</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -412,8 +562,16 @@
                         Text="{Binding Curp, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="CURP"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeCharacter</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
                 <Label
                     FontSize="15"
@@ -430,7 +588,7 @@
                         Text="{Binding Facebook, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Ej. @UsuarioFacebook"
-                        PlaceholderColor="Black"
+                        PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -448,9 +606,72 @@
                         Text="{Binding Observacion, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Observaciones"
-                        PlaceholderColor="Black"
-                        VerticalOptions="EndAndExpand"/>
+                        PlaceholderColor="Gray"
+                        VerticalOptions="EndAndExpand">
+                        <Entry.Keyboard>
+                            <Keyboard x:FactoryMethod="Create">
+                                <x:Arguments>
+                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                </x:Arguments>
+                            </Keyboard>
+                        </Entry.Keyboard>
+                    </Entry>
                 </Frame>
+                <Grid
+                    Padding="0, 0, 0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Image 
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    x:Name="CredencialFrontal"
+                    Aspect="AspectFill"
+                    BackgroundColor="#F0F0F0"
+                    HorizontalOptions="Center"
+                    Source="{Binding CredencialFrontalSource, Mode=TwoWay}"
+                    HeightRequest="150"
+                    WidthRequest="140"
+                    VerticalOptions="Center"
+                    />
+                    <Image 
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    x:Name="CredencialPosterior"
+                    Aspect="AspectFill"
+                    BackgroundColor="#F0F0F0"
+                    HorizontalOptions="Center"
+                    Source="{Binding CredencialPosteriorSource, Mode=TwoWay}"
+                    HeightRequest="150"
+                    WidthRequest="140"
+                    VerticalOptions="Center"
+                    />
+                    <Button
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding SelectCredencialFrontalCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Credencial Frontal"
+                    TextColor="White"
+                    />
+                    <Button
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding SelectCredencialPosteriorCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Credencial Posterior"
+                    TextColor="White"
+                    />
+                </Grid>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>

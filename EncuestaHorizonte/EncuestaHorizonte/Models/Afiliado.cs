@@ -1,6 +1,8 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace EncuestaHorizonte.Models
@@ -9,7 +11,6 @@ namespace EncuestaHorizonte.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-
         public string Nombre { get; set; }
 
         public string NombreSegundo { get; set; }
@@ -17,6 +18,12 @@ namespace EncuestaHorizonte.Models
         public string ApellidoPat { get; set; }
 
         public string ApellidoMat { get; set; }
+
+        public string Sexo { get; set; }
+
+        public string Edad { get; set; }
+
+        public string EstadoCivil { get; set; }
 
         public string Domicilio { get; set; }
 
@@ -57,40 +64,12 @@ namespace EncuestaHorizonte.Models
         public string Observaciones { get; set; }
 
         public byte[] Foto { get; set; }
-        /*
-        public int IdCaporal { get; set; }
 
-        public string NomCap { get; set; }
-        */
-        /*
-        public string Capp { get; set; }
+        public byte[] CredencialFrontal { get; set; }
 
-        public string Capm { get; set; }
-        */
-        /*public int Cnsle { get; set; }
+        public byte[] CredencialPosterior { get; set; }
 
-        public int IdEmp { get; set; }
+        public string IdUsuario { get; set; }
 
-        public string NomEmp { get; set; }
-        /*
-        public string App { get; set; }
-
-        public string Apm { get; set; }
-        */
-        /*public int IdLab { get; set; }
-
-        public string DescLab { get; set; }
-
-        public int IdArea { get; set; }
-
-        public int Cable { get; set; }
-
-        public int Lote { get; set; }
-
-        public double Cantidad { get; set; }
-
-        public string FecExeLab { get; set; }
-
-        public int Dup { get; set; }*/
     }
 }

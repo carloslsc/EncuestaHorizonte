@@ -44,7 +44,7 @@ namespace EncuestaHorizonte.Services
         public async Task<Response> Post<T>(
             string urlBase,
             string controller,
-            List<T> ObjetoJson)
+            Send ObjetoJson)
         {
             try
             {

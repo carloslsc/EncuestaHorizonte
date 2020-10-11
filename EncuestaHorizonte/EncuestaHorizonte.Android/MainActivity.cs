@@ -19,6 +19,8 @@ namespace EncuestaHorizonte.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            this.Window.SetFlags(WindowManagerFlags.Secure, WindowManagerFlags.Secure);
+
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);

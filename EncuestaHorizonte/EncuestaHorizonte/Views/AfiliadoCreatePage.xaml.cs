@@ -15,6 +15,10 @@ namespace EncuestaHorizonte.Views
         public AfiliadoCreatePage()
         {
             InitializeComponent();
+            Image.Source = "no_image";
+            CredencialFrontal.Source = "no_image";
+            CredencialPosterior.Source = "no_image";
         }
+
     }
 }

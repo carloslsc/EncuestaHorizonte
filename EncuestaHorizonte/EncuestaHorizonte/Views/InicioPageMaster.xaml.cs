@@ -16,6 +16,7 @@ namespace EncuestaHorizonte.Views
     public partial class InicioPageMaster : ContentPage
     {
         public ListView ListView;
+        public ActivityIndicator ActivityIndicator;
 
         public InicioPageMaster()
         {
@@ -23,6 +24,7 @@ namespace EncuestaHorizonte.Views
 
             //BindingContext = new InicioPageMasterViewModel();
             ListView = MenuItemsListView;
+            ActivityIndicator = Cargador;
         }
 
         class InicioPageMasterViewModel //: INotifyPropertyChanged

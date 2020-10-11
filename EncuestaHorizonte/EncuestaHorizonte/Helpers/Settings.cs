@@ -20,10 +20,12 @@ namespace EncuestaHorizonte.Helpers
         const string usuario = "Usuario";
         const string password = "Password";
         const string nombre = "Nombre";
+        const string idUsuario = "0";
         const string servidor = "horizonte2021.com.mx";
         const string adminU = "AdminU";
         const string adminP = "AdminP";
         const string id = "0";
+        const string exitosos = "Exitosos";
         static readonly string stringDefault = string.Empty;
 
         public static string Area
@@ -74,6 +76,18 @@ namespace EncuestaHorizonte.Helpers
             }
         }
 
+        public static string IdUsuario
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(idUsuario, stringDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(idUsuario, value);
+            }
+        }
+
         public static string Servidor
         {
             get
@@ -121,5 +135,16 @@ namespace EncuestaHorizonte.Helpers
             }
         }
 
+        public static string Exitosos
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(exitosos, stringDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(exitosos, value);
+            }
+        }
     }
 }

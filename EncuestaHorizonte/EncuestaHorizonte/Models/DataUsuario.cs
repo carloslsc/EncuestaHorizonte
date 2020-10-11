@@ -18,5 +18,8 @@ namespace EncuestaHorizonte.Models
 
         [JsonProperty(PropertyName = "id_lugar")]
         public int Id_Lugar { get; set; }
+
+        [JsonProperty(PropertyName = "id_usuario")]
+        public int Id_Usuario { get; set; }
     }
 }

@@ -13,6 +13,8 @@
     <ListView x:Name="MenuItemsListView"
               SeparatorVisibility="None"
               HasUnevenRows="true"
+              Margin="0"
+              HeightRequest="100"
               ItemsSource="{Binding MenuItems, Mode=TwoWay}">
       <ListView.Header>
         <Grid BackgroundColor="#03A9F4"
@@ -66,5 +68,12 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-  </StackLayout>
+        <ActivityIndicator
+            x:Name="Cargador"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="StartAndExpand"
+            IsRunning="False"
+            IsVisible="False"
+        />
+    </StackLayout>
 </ContentPage>

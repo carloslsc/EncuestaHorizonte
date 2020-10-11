@@ -47,26 +47,36 @@ namespace EncuestaHorizonte.Views
                 NombreSegundo.Text = Afiliado.NombreSegundo;
                 ApellidoPat.Text = Afiliado.ApellidoPat;
                 ApellidoMat.Text = Afiliado.ApellidoMat;
+                Edad.Text = Afiliado.Edad;
+                Sexo.SelectedItem = Afiliado.Sexo;
+                EstadoCivil.SelectedItem = Afiliado.EstadoCivil;
                 Domicilio.Text = Afiliado.Domicilio;
                 TelefonoFijo.Text = Afiliado.TelefonoFijo;
                 TelefonoCelular.Text = Afiliado.TelefonoCelular;
                 TelefonoAlter.Text = Afiliado.TelefonoAlter;
-                Ocupacion.Text = Afiliado.Ocupacion;
-                Escolaridad.Text = Afiliado.Escolaridad;
+                Ocupacion.SelectedItem = Afiliado.Ocupacion;
+                Escolaridad.SelectedItem = Afiliado.Escolaridad;
                 Email.Text = Afiliado.Email;
                 NumIne.Text = Afiliado.NumIne;
                 ClaveIne.Text = Afiliado.ClaveIne;
                 Curp.Text = Afiliado.Curp;
                 Facebook.Text = Afiliado.Facebook;
                 Observacion.Text = Afiliado.Observaciones;
-                
-                //Image.Source = Afiliado.Foto;
+
+                Image.Source = "no_image";
+                CredencialFrontal.Source = "no_image";
+                CredencialPosterior.Source = "no_image";
+
                 try
                 {
                     if (!Afiliado.Foto.Equals(null))
                         Image.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.Foto));
-                    else
-                        Image.Source = "no_image";
+
+                    if (!Afiliado.CredencialFrontal.Equals(null))
+                        CredencialFrontal.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialFrontal));
+
+                    if (!Afiliado.CredencialPosterior.Equals(null))
+                        CredencialPosterior.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialPosterior));
                 }
                 catch (Exception ex)
                 {

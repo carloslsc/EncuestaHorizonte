@@ -7,6 +7,7 @@ using Plugin.Media.Abstractions;
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -31,10 +32,17 @@ namespace EncuestaHorizonte.ViewModels
         private string nombreSegundo;
         private string apellidoPat;
         private string apellidoMat;
+        private ObservableCollection<string> sexos;
+        private ObservableCollection<string> estadosCiviles;
+        private string sexoSelected;
+        private string edad;
+        private string estadoCivilSelected;
         private string domicilio;
         private string telefonoFijo;
         private string telefonoCelular;
         private string telefonoAlter;
+        private ObservableCollection<string> ocupaciones;
+        private ObservableCollection<string> escolaridades;
         private string ocupacion;
         private string escolaridad;
         private string email;
@@ -44,15 +52,31 @@ namespace EncuestaHorizonte.ViewModels
         private string facebook;
         private string observacion;
         private Afiliado afiliado;
-        private ImageSource imageSource;
+        private ImageSource fotoSource;
+        private ImageSource credencialFrontalSource;
+        private ImageSource credencialPosteriorSource;
         private MediaFile file;
+        private MediaFile credencialFrontalfile;
+        private MediaFile credencialPosteriorfile;
         #endregion
 
-        #region Properties
-        public ImageSource ImageSource
+        #region Properties        
+        public ImageSource FotoSource
         {
-            get { return this.imageSource; }
-            set { SetValue(ref this.imageSource, value); }
+            get { return this.fotoSource; }
+            set { SetValue(ref this.fotoSource, value); }
+        }
+
+        public ImageSource CredencialFrontalSource
+        {
+            get { return this.credencialFrontalSource; }
+            set { SetValue(ref this.credencialFrontalSource, value); }
+        }
+
+        public ImageSource CredencialPosteriorSource
+        {
+            get { return this.credencialPosteriorSource; }
+            set { SetValue(ref this.credencialPosteriorSource, value); }
         }
 
         public string Municipio
@@ -121,6 +145,36 @@ namespace EncuestaHorizonte.ViewModels
             set { SetValue(ref this.apellidoMat, value); }
         }
 
+        public ObservableCollection<string> Sexos
+        {
+            get { return this.sexos; }
+            set { SetValue(ref this.sexos, value); }
+        }
+
+        public ObservableCollection<string> EstadosCiviles
+        {
+            get { return this.estadosCiviles; }
+            set { SetValue(ref this.estadosCiviles, value); }
+        }
+
+        public string SexoSelected
+        {
+            get { return this.sexoSelected; }
+            set { SetValue(ref this.sexoSelected, value); }
+        }
+
+        public string Edad
+        {
+            get { return this.edad; }
+            set { SetValue(ref this.edad, value); }
+        }
+
+        public string EstadoCivilSelected
+        {
+            get { return this.estadoCivilSelected; }
+            set { SetValue(ref this.estadoCivilSelected, value); }
+        }
+
         public string Domicilio
         {
             get { return this.domicilio; }
@@ -143,6 +197,18 @@ namespace EncuestaHorizonte.ViewModels
         {
             get { return this.telefonoAlter; }
             set { SetValue(ref this.telefonoAlter, value); }
+        }
+
+        public ObservableCollection<string> Ocupaciones
+        {
+            get { return this.ocupaciones; }
+            set { SetValue(ref this.ocupaciones, value); }
+        }
+
+        public ObservableCollection<string> Escolaridades
+        {
+            get { return this.escolaridades; }
+            set { SetValue(ref this.escolaridades, value); }
         }
 
         public string Ocupacion
@@ -203,10 +269,52 @@ namespace EncuestaHorizonte.ViewModels
         #region Constructor
         public AfiliadoEditViewModel()
         {
-            this.file = null;
+            //this.file = null;
             this.helperAfiliado = new FullAfiliado();
-            this.ImageSource = "no_image";
-
+            this.FotoSource = "no_image";
+            this.CredencialFrontalSource = "no_image";
+            this.CredencialPosteriorSource = "no_image";
+            this.Sexos = new ObservableCollection<string>()
+            {
+                "Masculino",
+                "Femenino"
+            };
+            this.EstadosCiviles = new ObservableCollection<string>()
+            {
+                "Soltera/o",
+                "Casada/o",
+                "Viuda/o",
+                "Madre Soltera",
+                "Padre Soltero"
+            };
+            this.Ocupaciones = new ObservableCollection<string>()
+            {
+                "Desempleada/o",
+                "Ama de Casa",
+                "Estudiante",
+                "Campesina/o / Ejidataria/o",
+                "Pequeña/o Productor/a",
+                "Comerciante",
+                "Empleada/o de Gobierno",
+                "Empleada/o Particular",
+                "Empresaria/o",
+                "Profesionista Independiente",
+                "Jubilida/o / Pensionada/o",
+                "Otra/o"
+            };
+            this.Escolaridades = new ObservableCollection<string>()
+            {
+                "Ninguna",
+                "Preescolar",
+                "Primaria",
+                "Secundaria",
+                "Carrera Ténica con Secundaria Terminada",
+                "Preparatoria o Bachillerato",
+                "Carrera Técnica con Preparatoria Terminada",
+                "Normal",
+                "Profesional",
+                "Posgrado"
+            };
         }
         #endregion
 
@@ -232,6 +340,21 @@ namespace EncuestaHorizonte.ViewModels
             get
             {
                 return new RelayCommand(SelectImage);
+            }
+        }
+        public ICommand SelectCredencialFrontalCommand
+        {
+            get
+            {
+                return new RelayCommand(SelectCredencialFrontal);
+            }
+        }
+
+        public ICommand SelectCredencialPosteriorCommand
+        {
+            get
+            {
+                return new RelayCommand(SelectCredencialPosterior);
             }
         }
 
@@ -264,6 +387,7 @@ namespace EncuestaHorizonte.ViewModels
                 //var aff = this.Afiliado;
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
+                    this.Afiliado = new Afiliado();
                     this.Afiliado.Id = int.Parse(Settings.Id);
                     conn.CreateTable<Afiliado>();
                     rows += conn.Delete(this.Afiliado);
@@ -281,18 +405,6 @@ namespace EncuestaHorizonte.ViewModels
             }
 
             
-            /*using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-            {
-                conn.CreateTable<Afiliado>();
-                this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
-                    this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.Domicilio, this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter,
-                    this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, this.Facebook, this.Observacion, imageArray);
-                //rows += conn.Insert(this.Afiliado);
-            }*/
-            /*await Application.Current.MainPage.DisplayAlert(
-                "hola",
-                this.Afiliado,
-                "aceptar");/*/
         }
 
         public async void SelectImage()
@@ -311,7 +423,7 @@ namespace EncuestaHorizonte.ViewModels
             }
             if (this.file != null)
             {
-                this.ImageSource = ImageSource.FromStream(() =>
+                this.FotoSource = ImageSource.FromStream(() =>
                 {
                     var stream = file.GetStream();
                     return stream;
@@ -319,9 +431,150 @@ namespace EncuestaHorizonte.ViewModels
             }
         }
 
+        public async void SelectCredencialFrontal()
+        {
+            await CrossMedia.Current.Initialize();
+
+            if (CrossMedia.Current.IsCameraAvailable)
+            {
+                this.credencialFrontalfile = await CrossMedia.Current.TakePhotoAsync(
+                    new StoreCameraMediaOptions
+                    {
+                        Directory = "Sample",
+                        Name = "testCredencialF.jpg",
+                        PhotoSize = PhotoSize.Small
+                    });
+            }
+            if (this.credencialFrontalfile != null)
+            {
+                this.CredencialFrontalSource = ImageSource.FromStream(() =>
+                {
+                    var stream = credencialFrontalfile.GetStream();
+                    return stream;
+                });
+            }
+        }
+
+
+        public async void SelectCredencialPosterior()
+        {
+            await CrossMedia.Current.Initialize();
+
+            if (CrossMedia.Current.IsCameraAvailable)
+            {
+                this.credencialPosteriorfile = await CrossMedia.Current.TakePhotoAsync(
+                    new StoreCameraMediaOptions
+                    {
+                        Directory = "Sample",
+                        Name = "testCredencialP.jpg",
+                        PhotoSize = PhotoSize.Small
+                    });
+            }
+            if (this.credencialPosteriorfile != null)
+            {
+                this.CredencialPosteriorSource = ImageSource.FromStream(() =>
+                {
+                    var stream = credencialPosteriorfile.GetStream();
+                    return stream;
+                });
+            }
+        }
+
         public async void Editar()
         {
-            if (this.Municipio.Equals(string.Empty))
+            int num = 0;
+
+            var imageFotoPerfil = this.FotoSource as FileImageSource;
+            var imageCredencialFrontal = this.CredencialFrontalSource as FileImageSource;
+            var imageCredencialPosterior = this.CredencialPosteriorSource as FileImageSource;
+
+            string fotoRuta = string.Empty;
+            string credencialFRuta = string.Empty;
+            string credencialPRuta = string.Empty;
+
+            if (imageFotoPerfil == null)
+            {
+                fotoRuta = "0";
+            }
+            else
+            {
+                fotoRuta = "no_image";
+            }
+
+            if (imageCredencialFrontal == null)
+            {
+                credencialFRuta = "0";
+            }
+            else
+            {
+                credencialFRuta = "no_image";
+            }
+
+            if (imageCredencialPosterior == null)
+            {
+                credencialPRuta = "0";
+            }
+            else
+            {
+                credencialPRuta = "no_image";
+            }
+            if (fotoRuta.Equals("no_image"))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Se necesita una foto de perfil",
+                    "Aceptar");
+            }
+            else if (this.Nombre.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Nombre Vacío",
+                    "Aceptar");
+            }
+            else if (this.ApellidoPat.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Apellido Paterno Vacío",
+                    "Aceptar");
+            }
+            else if (this.ApellidoMat.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Apellido Materno Vacío",
+                    "Aceptar");
+            }
+            else if (this.SexoSelected.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Sexo Vacío",
+                    "Aceptar");
+            }
+            else if (this.Edad.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Edad Vacío",
+                    "Aceptar");
+            }
+            else if (!Int32.TryParse(this.Edad, out num))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo edad no es númerico",
+                    "Aceptar");
+            }
+            else if (this.EstadoCivilSelected.Equals(string.Empty))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo Estado Civil Vacío",
+                    "Aceptar");
+            }
+            else if (this.Municipio.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -335,6 +588,13 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Región Vacío",
                     "Aceptar");
             }
+            else if (!Int32.TryParse(this.Region, out num))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo región no es númerico",
+                    "Aceptar");
+            }
             else if (this.Zona.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -342,11 +602,25 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Zona Vacío",
                     "Aceptar");
             }
+            else if (!Int32.TryParse(this.Zona, out num))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo zona no es númerico",
+                    "Aceptar");
+            }
             else if (this.Seccion.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Sección Vacío",
+                    "Aceptar");
+            }
+            else if (!Int32.TryParse(this.Seccion, out num))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Campo sección no es númerico",
                     "Aceptar");
             }
             else if (this.Casilla.Equals(string.Empty))
@@ -370,62 +644,34 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Comunidad Vacío",
                     "Aceptar");
             }
-            else if (this.Nombre.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Nombre Vacío",
-                    "Aceptar");
-            }
-            /*else if (this.NombreSegundo.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Segundo Nombre Vacío",
-                    "Aceptar");
-            }*/
-            else if (this.ApellidoPat.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Apellido Paterno Vacío",
-                    "Aceptar");
-            }
-            else if (this.ApellidoMat.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Apellido Materno Vacío",
-                    "Aceptar");
-            }
             else if (this.Domicilio.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Domicilio Vacío",
                     "Aceptar");
-            }
+            }/*
             else if (this.TelefonoFijo.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Teléfono Fijo Vacío",
                     "Aceptar");
-            }
+            }*/
             else if (this.TelefonoCelular.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Teléfono Celular Vacío",
                     "Aceptar");
-            }
+            }/*
             else if (this.TelefonoAlter.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Teléfono Alterno/Radio Vacío",
                     "Aceptar");
-            }
+            }*/
             else if (this.Ocupacion.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -465,7 +711,7 @@ namespace EncuestaHorizonte.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Número INE Necesita 14 Dígitos",
+                    string.Format("Campo Número INE Tiene {0} dígitos y deben ser 14 dígitos", this.NumIne.Length),
                     "Aceptar");
             }
             else if (this.ClaveIne.Equals(string.Empty))
@@ -473,6 +719,13 @@ namespace EncuestaHorizonte.ViewModels
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Clave INE Vacío",
+                    "Aceptar");
+            }
+            else if (!this.ClaveIne.Length.Equals(17))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    string.Format("Campo Clave del INE Tiene {0} caracteres y deben ser 17 caracteres", this.ClaveIne.Length),
                     "Aceptar");
             }
             else if (this.Curp.Equals(string.Empty))
@@ -486,37 +739,43 @@ namespace EncuestaHorizonte.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo CURP Necesita 18 Dígitos",
+                    string.Format("Campo CURP Tiene {0} caracteres y deben ser 18 caracteres", this.Curp.Length),
                     "Aceptar");
             }
-            else if (this.Facebook.Equals(string.Empty))
+            else if (credencialFRuta.Equals("no_image"))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Facebook Vacío",
+                    "Foto frontal de la credencial es obligatoria",
                     "Aceptar");
             }
-            else if (this.Observacion.Equals(string.Empty))
+            else if (credencialPRuta.Equals("no_image"))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Observación Vacío",
+                    "Foto posterior de la credencial es obligatoria",
                     "Aceptar");
             }
             else
             {
-                if (this.file != null)
-                {
-                    this.ImageSource = ImageSource.FromStream(() =>
-                    {
-                        var stream = file.GetStream();
-                        return stream;
-                    });
-                }
                 byte[] imageArray = null;
+                byte[] CredencialFArray = null;
+                byte[] CredencialPArray = null;
+
+                                
                 if (this.file != null)
                 {
                     imageArray = FilesHelper.ReadFully(this.file.GetStream());
+                }
+
+                if (this.credencialFrontalfile != null)
+                {
+                    CredencialFArray = FilesHelper.ReadFully(this.credencialFrontalfile.GetStream());
+                }
+
+                if (this.credencialPosteriorfile != null)
+                {
+                    CredencialPArray = FilesHelper.ReadFully(this.credencialPosteriorfile.GetStream());
                 }
 
                 int rows = 0;
@@ -526,9 +785,11 @@ namespace EncuestaHorizonte.ViewModels
                     conn.CreateTable<Afiliado>();
                     //string id = asfs.Id.ToString();
                     string id = Settings.Id;
+                    this.Afiliado = new Afiliado();
                     this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
-                        this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.Domicilio, this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter,
-                        this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, this.Facebook, this.Observacion, imageArray);
+                        this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
+                        this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
+                        this.Facebook, this.Observacion, imageArray, CredencialFArray, CredencialPArray);
                     rows += conn.Update(this.Afiliado);
                     
                 }

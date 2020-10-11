@@ -163,7 +163,7 @@ namespace EncuestaHorizonte.ViewModels
 
         private async void Capturar()
         {
-            this.Afi = null;//new Afiliado();
+            this.Afi = new Afiliado();
             await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage());
         }
 

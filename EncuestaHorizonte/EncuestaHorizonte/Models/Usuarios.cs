@@ -7,7 +7,7 @@ namespace EncuestaHorizonte.Models
 {
     public class Usuarios
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
         public int Id { get; set; }
 
         public string Nombre { get; set; }

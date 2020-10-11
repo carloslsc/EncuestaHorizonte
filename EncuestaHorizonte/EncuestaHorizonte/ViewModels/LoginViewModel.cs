@@ -10,6 +10,7 @@ using EncuestaHorizonte.Services;
 using SQLite;
 using EncuestaHorizonte.Models;
 using CryptSharp;
+using System.Threading.Tasks;
 
 namespace EncuestaHorizonte.ViewModels
 {
@@ -56,8 +57,8 @@ namespace EncuestaHorizonte.ViewModels
         public LoginViewModel()
         {
             this.apiService = new ApiService();
-            this.IsRunning = false;
-            this.Visible = false;
+            //this.IsRunning = false;
+            //this.Visible = false;
         }
         #endregion
 
@@ -74,6 +75,9 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Login()
         {
+
+            this.Visible = true;
+            this.IsRunning = true;
 
             if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
             {
@@ -110,9 +114,12 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
+                
+
                 byte[] PasswordBytes = Encoding.ASCII.GetBytes(this.Password);
                 string cryptedPassword = Crypter.Blowfish.Crypt(PasswordBytes, "$2a$07$g0uO0D9wPLBqFWNLwzO5qu");
 
+                
                 int validacion = 0;
 
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
@@ -124,6 +131,10 @@ namespace EncuestaHorizonte.ViewModels
                         
                         if (item.Password.Equals(cryptedPassword) && item.Usuario.Equals(this.Email))
                         {
+                            Settings.Usuario = this.Email;
+                            Settings.Password = cryptedPassword;
+                            Settings.IdUsuario = string.Format("{0}",item.Id);
+
                             validacion++;
                         }
                     }
@@ -137,20 +148,12 @@ namespace EncuestaHorizonte.ViewModels
                     return;
                 }
                 else
-                {
-                    Settings.Usuario = this.Email;
-                    Settings.Password = this.Password;
-
-                    this.Visible = true;
-                    this.IsRunning = true;
-
-                    
-                    this.Email = string.Empty;
-                    this.Password = string.Empty;
-
-
+                {  
                     this.IsRunning = false;
                     this.Visible = false;
+
+                    this.Email = string.Empty;
+                    this.Password = string.Empty;
 
                     Application.Current.MainPage = new NavigationPage(new InicioPage());
                     
