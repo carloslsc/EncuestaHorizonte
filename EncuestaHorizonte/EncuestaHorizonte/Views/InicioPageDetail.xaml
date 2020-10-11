@@ -10,6 +10,37 @@
   <StackLayout
       BindingContext="{Binding Inicio}"
       Padding="10">
+        <Label
+            FontSize="Medium"
+            HorizontalOptions="CenterAndExpand"
+            Text="{Binding Usuario, Mode=TwoWay}"
+            TextColor="Black"
+            />
+        <Grid HorizontalOptions="CenterAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label
+                FontSize="Small"
+                Grid.Column="0"
+                Grid.Row="0"
+                HorizontalOptions="CenterAndExpand"
+                Text="Número de promovidos exitosos subidos:"
+                TextColor="Black"
+            />
+            <Label
+                FontSize="Small"
+                Grid.Column="1"
+                Grid.Row="0"
+                HorizontalOptions="CenterAndExpand"
+                Text="{Binding Exitosos, Mode=TwoWay}"
+                TextColor="Black"
+            />
+        </Grid>
         <ListView
                 x:Name="Lista"
                 SelectedItem="{Binding Afi, Mode=TwoWay}"

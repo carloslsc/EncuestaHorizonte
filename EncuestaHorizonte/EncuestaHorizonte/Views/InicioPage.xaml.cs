@@ -242,8 +242,6 @@ namespace EncuestaHorizonte.Views
 
                 Settings.Id = string.Empty;
                 Settings.Nombre = string.Empty;
-                //Settings.Usuario = string.Empty;
-                //Settings.Password = string.Empty;
 
                 if (respuesta)
                 {
