@@ -33,11 +33,11 @@
                 TextColor="Black"
             />
             <Label
+                x:Name="Exitosos"
                 FontSize="Small"
                 Grid.Column="1"
                 Grid.Row="0"
                 HorizontalOptions="CenterAndExpand"
-                Text="{Binding Exitosos, Mode=TwoWay}"
                 TextColor="Black"
             />
         </Grid>

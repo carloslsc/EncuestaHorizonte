@@ -22,6 +22,7 @@ namespace EncuestaHorizonte.Views
         {
             InitializeComponent();
 
+            //Lista de objetos manipulables en  InicioPages.xaml.cs
             ListView = MenuItemsListView;
             ActivityIndicator = Cargador;
         }

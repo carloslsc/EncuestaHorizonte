@@ -226,40 +226,32 @@ namespace EncuestaHorizonte.Views
                             conn.Update(item);
                         }*/
                     }
-                }
-                
-                        
+                }                        
             }
+            //Cerrar Sesión
             else if (item.Id == 1)
             {
+                //Consulta para saber si desea cerrar sesión
                 var respuesta = await Application.Current.MainPage.DisplayAlert(
                     "ATENCIÓN",
                     "¿Desea Cerrar Sesión?",
                     "Aceptar",
                     "Cancelar");
 
+                //Resetear el item seleccionado
                 ((ListView)sender).SelectedItem = null;
 
+                //Eliminar las persistencias usadas
+                Settings.IdUsuario = string.Empty;
                 Settings.Id = string.Empty;
                 Settings.Nombre = string.Empty;
 
+                //Cambio de pagina
                 if (respuesta)
                 {
                     Application.Current.MainPage = new NavigationPage(new LoginPage());
                 }
             }
-        /*
-        var page = (Page)Activator.CreateInstance(item.TargetType);
-        page.Title = item.Title;
-
-        Detail = new NavigationPage(page);
-        IsPresented = false;
-
-        //MasterPage.ListView.SelectedItem = null;
-        if(e.SelectedItem == null)
-        {
-            return;
-        }*/
         }
     }
 }

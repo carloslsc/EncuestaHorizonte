@@ -19,7 +19,6 @@ namespace EncuestaHorizonte.ViewModels
 
         #region Attributes
         private string usuario;
-        private int exitosos;
         private ObservableCollection<Afiliado> afiliados;
         private Afiliado afi;
         #endregion
@@ -43,11 +42,6 @@ namespace EncuestaHorizonte.ViewModels
             set { SetValue(ref this.usuario, value); }
         }
 
-        public int Exitosos
-        {
-            get { return this.exitosos; }
-            set { SetValue(ref this.exitosos, value); }
-        }
         #endregion
 
         #region Constructor
@@ -55,7 +49,6 @@ namespace EncuestaHorizonte.ViewModels
         {
             //this.apiService = new ApiService();
             this.Usuario = Settings.Nombre;
-            this.Exitosos = Int32.Parse(Settings.Exitosos);
             this.Afi = new Afiliado();
         }
         #endregion
@@ -81,20 +74,30 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         private async void Capturar()
         {
+            //Reseteo del Item seleccionado
             this.Afi = new Afiliado();
+
+            //Cambio de Pagina
             await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoCreatePage());
         }
 
         private async void Editar()
         {
+            //Verificacion de haber seleccionado un usuario
             if (this.Afi.Id > 0)
             {
+                //Crear la variable del usuario que se mandara
                 var afiliado = this.Afi;
+                
+                //Reseteo del item seleccionado
                 this.Afi = new Afiliado();
+                
+                //Cambio de pagina
                 await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(afiliado));
             }
             else
             {
+                //Mensaje para el usuario
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "No ha seleccionado ningún afiliado",

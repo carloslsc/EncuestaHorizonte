@@ -11,7 +11,6 @@ namespace EncuestaHorizonte.ViewModels
         #region Attributes
         private InicioPageMasterMenuItem itemSelected;
         private ObservableCollection<InicioPageMasterMenuItem> menuItems;
-        //private string title;
         #endregion
 
         #region Properties
@@ -26,17 +25,11 @@ namespace EncuestaHorizonte.ViewModels
             get { return this.menuItems; }
             set { SetValue(ref this.menuItems, value); }
         }
-
-        /*
-        public string Title
-        {
-            get { return this.title; }
-            set { SetValue(ref this.title, value); }
-        }*/
         #endregion
 
         public InicioMasterViewModel()
         {
+            //Creacion de los objetos visibles en el menu hamburguesa
             this.MenuItems = new ObservableCollection<InicioPageMasterMenuItem>(new[]
             {
                 new InicioPageMasterMenuItem { Id = 0, Title = "Sincronizar", Image = "ic_autorenew" },
