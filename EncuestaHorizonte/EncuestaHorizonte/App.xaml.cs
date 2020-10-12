@@ -1,4 +1,5 @@
-﻿using EncuestaHorizonte.Views;
+﻿using EncuestaHorizonte.Helpers;
+using EncuestaHorizonte.Views;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
@@ -47,10 +48,18 @@ namespace EncuestaHorizonte
 
         protected override void OnSleep()
         {
+            if (Settings.IdUsuario.Equals(string.Empty))
+            {
+                MainPage = new NavigationPage(new InicioPage());
+            }
         }
 
         protected override void OnResume()
         {
+            if (Settings.IdUsuario.Equals(string.Empty))
+            {
+                MainPage = new NavigationPage(new InicioPage());
+            }
         }
     }
 }

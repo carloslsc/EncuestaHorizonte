@@ -53,7 +53,7 @@ namespace EncuestaHorizonte.Services
                     request,
                     Encoding.UTF8,
                     "application/json");
-                var client = new HttpClient();
+                var client = new HttpClient() { Timeout = TimeSpan.FromSeconds(900) }; 
                 client.BaseAddress = new Uri(urlBase);
                 var url = string.Format("{0}", controller);
                 var response = await client.PostAsync(url, content);
