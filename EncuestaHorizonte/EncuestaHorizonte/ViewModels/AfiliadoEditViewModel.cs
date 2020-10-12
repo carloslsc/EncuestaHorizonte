@@ -789,7 +789,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
                         this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
                         this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
-                        this.Facebook, this.Observacion, imageArray, CredencialFArray, CredencialPArray);
+                        this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, CredencialFArray, CredencialPArray);
                     rows += conn.Update(this.Afiliado);
                     
                 }

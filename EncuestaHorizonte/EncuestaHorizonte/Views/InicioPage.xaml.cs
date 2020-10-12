@@ -36,25 +36,31 @@ namespace EncuestaHorizonte.Views
 
             if (item.Id == 0)
             {
+                //Preguntar al usuario si desea sincronizar
                 var respuesta = await Application.Current.MainPage.DisplayAlert(
                     "ATENCIÓN",
                     "¿Desea Sincronizar la información?",
                     "Aceptar",
                     "Cancelar");
 
-
+                //Setear vacio el item selected
                 ((ListView)sender).SelectedItem = null;
 
                 if (respuesta)
                 {
-
+                    //Activar el ActiviyIndicator
                     MasterPage.ActivityIndicator.IsRunning = true;
                     MasterPage.ActivityIndicator.IsVisible = true;
 
+                    //Solicitar conexión con el servidor
                     var connection = await this.apiService.CheckConnection();
 
                     if (!connection.IsSuccess)
                     {
+                        //Desactivar el ActivityIndicator
+                        MasterPage.ActivityIndicator.IsRunning = false;
+                        MasterPage.ActivityIndicator.IsVisible = false;
+
                         await Application.Current.MainPage.DisplayAlert(
                             "Error",
                             connection.Message,
@@ -63,11 +69,13 @@ namespace EncuestaHorizonte.Views
                     }
                     else
                     {
+                        //Inicializar el objeto de enviado
                         Send Objeto = new Send();
 
                         using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                         {
-                            var afiliados = conn.Table<Afiliado>().ToList();
+                            //Obtener todos los afiliados por usuario
+                            var afiliados = conn.Table<Afiliado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).ToList();
 
                             List<AfiliadoSend> afiliadosSend = new List<AfiliadoSend>();
                             
@@ -106,125 +114,88 @@ namespace EncuestaHorizonte.Views
                                     CredencialPosterior = afiliado.CredencialPosterior
                                 };
 
+                                //Agregar un afiliado nuevo a la lista de envio
                                 afiliadosSend.Add(afiliadoSend);
                             }
+                            //Agregar la lista de afiliados al objeto a enviar
                             Objeto.Afiliados = afiliadosSend;
                         }
 
+                        //Crear un nuevo usuario para enviar
                         UsuarioSend usuarioSend = new UsuarioSend()
                         {
                             IdUsuario = Settings.IdUsuario
                         };
 
+                        //Agregar el usuario a enviar al objeto a enviar
                         Objeto.UsuarioSend = usuarioSend;
 
-                        /*Objeto.UsuarioSend.Usuario = Settings.Usuario;
-                        Objeto.UsuarioSend.Password = Settings.Password;
-                        */
-
+                        //Enviar los afiliados y el usuario
                         var response = await this.apiService.Post<Send>("https://" + Settings.Servidor + "/controladores/", "promovidos.controlador.php", Objeto);
 
-                        if (response.IsSuccess)
+                        //Obtencion de respuesta del servidor
+                        var objetoResult = (Result)response.Result;
+
+                        using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                         {
+                            //Obtención de el numero de casos exitosos que hay en servidor
+                            UsuarioSincronizado usuario = new UsuarioSincronizado()
+                            {
+                                Exitosos = Int32.Parse(objetoResult.Exitosos.TotalExitosos),
+                                IdUsuario = Int32.Parse(Settings.IdUsuario)
+                            };
+                            conn.InsertOrReplace(usuario);
+                        }
 
+                        //Resultado esperando promovidos repetidos
+                        if (objetoResult.Fallidos.Count > 0)
+                        {
+                            string promovidosFallidos = string.Empty;
 
-                            MasterPage.ActivityIndicator.IsRunning = false;
-                            MasterPage.ActivityIndicator.IsVisible = false;
+                            //Agregando a una cadena el nombre y la curp de los promovidos repetidos
+                            foreach (var itemResult in objetoResult.Fallidos)
+                            {
+                                promovidosFallidos += string.Format("Nombre: {0}\nCURP: {1}\n\n", itemResult.NombreCompleto, itemResult.Curp);
+                            }
 
+                            //Eliminacion de los afiliados en la base de datos interna
                             /*
                             using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                             {
-                                //conn.DropTable<Afiliado>();
+                                //conn.Delete<Afiliado>();
                             }*/
 
-                            await Application.Current.MainPage.DisplayAlert(
-                                "EXITO",
-                                "Datos enviados",
-                                "Aceptar");
-                        }
-                        else
-                        {
-
+                            //Desactivacion del ActivityIndicator
                             MasterPage.ActivityIndicator.IsRunning = false;
                             MasterPage.ActivityIndicator.IsVisible = false;
 
                             await Application.Current.MainPage.DisplayAlert(
-                                "ERROR",
-                                "Los datos no fueron enviados",
-                                "Aceptar");
-                        }
-
-                        
-
-                        /*if (response.IsSuccess)
-                        {
-                            await Application.Current.MainPage.DisplayAlert(
                                 "EXITO",
-                                "Datos enviados",
+                                "Se sincronizó exitosamente la \ncantidad de: "+objetoResult.Exitosos.ExitososAlMomento+
+                                " y cuenta con: "+objetoResult.Exitosos.TotalExitosos+" promovidos\n\n"+
+                                "Sin embargo solo los siguientes\nno pudieron ser sincronizados:\n\n"+promovidosFallidos,
                                 "Aceptar");
-                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                            {
-                                conn.CreateTable<Lotes>();
-                                var Lotes = conn.Table<Lotes>().Where(x => x.Sel.Equals(1)).ToList();
-                                foreach (var item in Lotes)
-                                {
-                                    item.Sel = 0;
-                                    conn.Update(item);
-                                }
-                            }
                         }
+                        //Resultado no esperando promovidos repetidos
                         else
                         {
+                            //Eliminacion de los afiliados en la base de datos interna
+                            /*
+                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                            {
+                                //conn.Delete<Afiliado>();
+                            }*/
+
+                            //Desactivacion del ActivityIndicator
+                            MasterPage.ActivityIndicator.IsRunning = false;
+                            MasterPage.ActivityIndicator.IsVisible = false;
+
                             await Application.Current.MainPage.DisplayAlert(
-                                "ERROR",
-                                "Los datos no fueron enviados",
+                                "EXITO",
+                                "Se sincronizó exitosamente la \ncantidad de: " + objetoResult.Exitosos.ExitososAlMomento +
+                                " y cuenta con: " + objetoResult.Exitosos.TotalExitosos + " promovidos\n",
                                 "Aceptar");
                         }
-                        */
-                        /*List<Send> Objeto = new List<Send>();
-                        List<Empleado> Emp = new List<Empleado>();
-                        using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                        {
-                            conn.CreateTable<Empleado>();
-                            Emp = conn.Table<Empleado>().Where(x => x.Dup.Equals(1)).ToList();
-                            foreach (var item in Emp)
-                            {
-                                Send O = new Send()
-                                {
-                                    IdCaporal = item.IdCaporal,
-                                    /*IdEmp = item.IdEmp,
-                                    IdLab = item.IdLab,*/
-                        //IdArea = item.IdArea,
-                        //Cnsle = item.Cnsle,
-                        //IdCable = item.Cable,
-                        //IdLote = item.Lote,
-                        //Cantidad = item.Cantidad,
-                        //FecExeLab = item.FecExeLab
-                        /*};
-                        Objeto.Add(O);
-                    }
-                }
-
-                var respuesta = await this.apiService.Post<Send>("http://" + Settings.Servidor + "/finca_ban/", "cont.php", Objeto);
-
-                this.IsRunning = false;
-                this.IsVisible = false;
-
-                if (respuesta.IsSuccess)
-                {
-                    await Application.Current.MainPage.DisplayAlert(
-                        "EXITO",
-                        "Datos enviados",
-                        "Aceptar");
-                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                    {
-                        conn.CreateTable<Lotes>();
-                        var Lotes = conn.Table<Lotes>().Where(x => x.Sel.Equals(1)).ToList();
-                        foreach (var item in Lotes)
-                        {
-                            item.Sel = 0;
-                            conn.Update(item);
-                        }*/
                     }
                 }                        
             }

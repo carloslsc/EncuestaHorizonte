@@ -18,46 +18,27 @@ namespace EncuestaHorizonte
             try
             {
                 var status = await Permissions.RequestAsync<Permissions.Camera>();
-
-                //var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Camera);
-                /*if (status != Permissions.CheckStatusAsync<Permissions.Camera>Status. PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Camera))
-                    {
-                        await App.Current.MainPage.DisplayAlert("Error", "Se Requiere el uso de tu Camara", "Aceptar");
-                    }
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Camera);
-                    if (status == PermissionStatus.Granted)
-                    {
-                        //await App.Current.MainPage.DisplayAlert("Bien", "Se Requiere el uso de tu localización", "Aceptar");
-                        //loc.GetLocation();
-                        //await CrossGeolocator.Current.StartListeningAsync(new TimeSpan(0, 0, 1), 1);
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Camara Denegada", "Se Requiere el uso de tu Camara", "Aceptar");
-                    }
-                }*/
             }
             catch (Exception ex)
             {
                 await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar");
-                //throw;
             }
 
         }
 
         public App(string databaseLocation)
         {
+            //Inicializar Componentes de la pagina principal
             InitializeComponent();
 
+            //Crear una pagina principal
             this.MainPage = new NavigationPage(new LoginPage());
 
+            //Preguntar por primera vez los servicios a usar
             GetPermissions();
             
+            //Inicializacion de la base de datos sqlite
             DatabaseLocation = databaseLocation;
-
-            //MainPage = new MainPage();
         }
 
         protected override void OnStart()

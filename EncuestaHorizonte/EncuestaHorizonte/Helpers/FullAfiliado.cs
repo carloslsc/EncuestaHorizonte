@@ -11,7 +11,7 @@ namespace EncuestaHorizonte.Helpers
         public Afiliado Llenado(string id, string municipio, string region, string zona, string seccion, string casilla, string promotor,
             string comunidad, string nombre, string nombreSegundo, string apellidoPat, string apellidoMat, string sexo, string edad, string estadoCivil, 
             string domicilio, string telefonoFijo, string telefonoCelular, string telefonoAlter, string ocupacion, string escolaridad, string email,
-            string numIne, string claveIne, string curp, string facebook, string observaciones, byte[] imageArray, byte[] credencialF, byte[] credencialP)
+            string numIne, string claveIne, string curp, string facebook, string observaciones, string idusuario, byte[] imageArray, byte[] credencialF, byte[] credencialP)
         {
             int idAfiliado = Convert.ToInt32(id);
 
@@ -46,6 +46,7 @@ namespace EncuestaHorizonte.Helpers
                 afiliado.Curp = curp;
                 afiliado.Facebook = facebook;
                 afiliado.Observaciones = observaciones;
+                afiliado.IdUsuario = idusuario;
             }
             else
             {
@@ -76,6 +77,7 @@ namespace EncuestaHorizonte.Helpers
                 afiliado.Curp = curp;
                 afiliado.Facebook = facebook;
                 afiliado.Observaciones = observaciones;
+                afiliado.IdUsuario = idusuario;
                 afiliado.Foto = imageArray;
                 afiliado.CredencialFrontal = credencialF;
                 afiliado.CredencialPosterior = credencialP;

@@ -135,7 +135,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Visible = false;
 
                     //Verificación de la existencia del usuario
-                    if (!usuarioCorrecto.Equals(null))
+                    if (usuarioCorrecto != null)
                     {
                         //Vaciado de los campos en XAML
                         this.Email = string.Empty;

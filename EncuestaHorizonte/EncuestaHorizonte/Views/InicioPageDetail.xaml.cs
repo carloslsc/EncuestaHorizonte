@@ -26,26 +26,27 @@ namespace EncuestaHorizonte.Views
 
             Exitosos.Text = "0";
 
-            //Obtencion de los promovidos segun usuario y Cambio en el campo exitosos en XAML
+            //Obtencion de los promovidos segun usuario
             using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
             {
                 //Obtencion de los promovidos segun usuario
                 conn.CreateTable<Afiliado>();
                 var list = conn.Table<Afiliado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).ToList();
                 Lista.ItemsSource = list;
+            }
 
+            //Cambio en el campo exitosos en XAML
+            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            {
                 //Obtencion de la cantidad de casos exitosos del usuario
                 conn.CreateTable<UsuarioSincronizado>();
-                int rows = conn.Table<UsuarioSincronizado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).Count();
+                UsuarioSincronizado usuarioSincronizado = conn.Table<UsuarioSincronizado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).FirstOrDefault();
 
                 //Verificacion de la existencia de al menos un caso de exito del usuario
-                if (rows > 0)
+                if (usuarioSincronizado != null)
                 {
-                    UsuarioSincronizado usuarioSincronizado = conn.Table<UsuarioSincronizado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).FirstOrDefault();
                     Exitosos.Text = usuarioSincronizado.Exitosos.ToString();
                 }
-
-                
             }
         }
     }

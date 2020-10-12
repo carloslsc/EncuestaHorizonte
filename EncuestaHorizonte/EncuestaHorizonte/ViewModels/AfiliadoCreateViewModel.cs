@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -185,19 +186,43 @@ namespace EncuestaHorizonte.ViewModels
         public string TelefonoFijo
         {
             get { return this.telefonoFijo; }
-            set { SetValue(ref this.telefonoFijo, value); }
+            set
+            {
+                if (this.telefonoFijo != value)
+                {
+                    this.telefonoFijo = value;
+                    OnPropertyChanged();
+                    this.TelefonoFijo = TelefonoFormat(this.TelefonoFijo);
+                }
+            }
         }
 
         public string TelefonoCelular
         {
             get { return this.telefonoCelular; }
-            set { SetValue(ref this.telefonoCelular, value); }
+            set 
+            {
+                if (this.telefonoCelular != value)
+                {
+                    this.telefonoCelular = value;
+                    OnPropertyChanged();
+                    this.TelefonoCelular = TelefonoFormat(this.TelefonoCelular);
+                }
+            }
         }
 
         public string TelefonoAlter
         {
             get { return this.telefonoAlter; }
-            set { SetValue(ref this.telefonoAlter, value); }
+            set
+            {
+                if (this.telefonoAlter != value)
+                {
+                    this.telefonoAlter = value;
+                    OnPropertyChanged();
+                    this.TelefonoAlter = TelefonoFormat(this.TelefonoAlter);
+                }
+            }
         }
 
         public ObservableCollection<string> Ocupaciones
@@ -271,6 +296,8 @@ namespace EncuestaHorizonte.ViewModels
         public AfiliadoCreateViewModel()
         {
             this.helperAfiliado = new FullAfiliado();
+
+            //Llenado de los campos de tipo picker
             this.Sexos = new ObservableCollection<string>()
             {
                 "Masculino",
@@ -312,6 +339,8 @@ namespace EncuestaHorizonte.ViewModels
                 "Profesional",
                 "Posgrado"
             };
+
+            //Seteo de todos los elementos del XAML
             this.Municipio = string.Empty;
             this.Region = string.Empty;
             this.Zona = string.Empty;
@@ -389,15 +418,36 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Cancelar()
         {
+            //Cambio de pagina
             await Application.Current.MainPage.Navigation.PopAsync();
+        }
+
+        public string TelefonoFormat(string telefono)
+        {
+            try
+            {
+                //Darle el formato a la cadena telefono
+                string telefonoFinal = Regex.Replace(telefono, @"(\d{3})(\d{3})(\d{4})", "($1) $2-$3");
+
+                //Implementar el cambio de formato
+                return telefonoFinal;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public async void SelectImage()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.file = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
@@ -406,6 +456,8 @@ namespace EncuestaHorizonte.ViewModels
                         PhotoSize = PhotoSize.Small
                     });
             }
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.file != null)
             {
                 this.ImageSource = ImageSource.FromStream(() =>
@@ -418,10 +470,13 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void SelectCredencialFrontal()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.credencialFrontalfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
@@ -430,6 +485,8 @@ namespace EncuestaHorizonte.ViewModels
                         PhotoSize = PhotoSize.Small
                     });
             }
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.credencialFrontalfile != null)
             {
                 this.CredencialFrontalSource = ImageSource.FromStream(() =>
@@ -443,10 +500,13 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void SelectCredencialPosterior()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.credencialPosteriorfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
@@ -455,6 +515,8 @@ namespace EncuestaHorizonte.ViewModels
                         PhotoSize = PhotoSize.Small
                     });
             }
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.credencialPosteriorfile != null)
             {
                 this.CredencialPosteriorSource = ImageSource.FromStream(() =>
@@ -468,15 +530,20 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void Capturar()
         {
+            //Variable para la validacion de campos numericos
             int num = 0;
+
+            //Obtener las imagenes del XAML
             var imageFotoPerfil = this.ImageSource as FileImageSource;
             var imageCredencialFrontal = this.CredencialFrontalSource as FileImageSource;
             var imageCredencialPosterior = this.CredencialPosteriorSource as FileImageSource;
 
+            //Obtencion de las rutas de las imagenes de XAML
             string fotoRuta = string.Empty;
             string credencialFRuta = string.Empty;
             string credencialPRuta = string.Empty;
 
+            //Verificaciones de las cadenas de ruta de imagenes de XAML
             if (imageFotoPerfil == null)
             {
                 fotoRuta = "0";
@@ -504,6 +571,8 @@ namespace EncuestaHorizonte.ViewModels
                 credencialPRuta = "no_image";
             }
 
+            //Validaciones
+            //Validacion de Imagen de foto de perfil
             if (fotoRuta.Equals("no_image"))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -511,6 +580,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Se necesita una foto de perfil",
                     "Aceptar");
             }
+            //Validaciones de campos vacios
             else if (this.Nombre.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -546,6 +616,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Edad Vacío",
                     "Aceptar");
             }
+            //Validacion de campo numerico
             else if (!Int32.TryParse(this.Edad, out num))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -636,28 +707,22 @@ namespace EncuestaHorizonte.ViewModels
                     "ERROR",
                     "Campo Domicilio Vacío",
                     "Aceptar");
-            }/*
-            else if (this.TelefonoFijo.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Teléfono Fijo Vacío",
-                    "Aceptar");
-            }*/
+            }
             else if (this.TelefonoCelular.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Teléfono Celular Vacío",
                     "Aceptar");
-            }/*
-            else if (this.TelefonoAlter.Equals(string.Empty))
+            }
+            //Validacion de tamaño de la cadena
+            else if (this.TelefonoCelular.Length.Equals(10))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Teléfono Alterno/Radio Vacío",
+                    string.Format("Campo Teléfono Celular tiene {0} digitos y solo deben se 10", this.TelefonoCelular.Length),
                     "Aceptar");
-            }*/
+            }
             else if (this.Ocupacion.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -772,7 +837,7 @@ namespace EncuestaHorizonte.ViewModels
                     this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
                         this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio, 
                         this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, 
-                        this.Facebook, this.Observacion, imageArray, CredencialFArray, CredencialPArray);
+                        this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, CredencialFArray, CredencialPArray);
                     rows += conn.Insert(this.Afiliado);
                 }
                 if (rows > 0)

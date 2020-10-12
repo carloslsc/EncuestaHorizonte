@@ -44,7 +44,7 @@ namespace EncuestaHorizonte.Services
         public async Task<Response> Post<T>(
             string urlBase,
             string controller,
-            Send ObjetoJson)
+            T ObjetoJson)
         {
             try
             {
@@ -68,13 +68,13 @@ namespace EncuestaHorizonte.Services
                 }
 
                 var result = await response.Content.ReadAsStringAsync();
-                var newRecord = JsonConvert.DeserializeObject<T>(result);
+                //var newRecord = JsonConvert.DeserializeObject<Result>(result);
 
                 return new Response
                 {
                     IsSuccess = true,
                     Message = "Record added OK",
-                    Result = newRecord,
+                    Result = JsonConvert.DeserializeObject<Result>(result),
                 };
             }
             catch (Exception ex)
