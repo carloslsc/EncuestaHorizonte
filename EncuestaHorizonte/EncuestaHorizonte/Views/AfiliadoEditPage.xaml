@@ -641,8 +641,8 @@
                     BackgroundColor="#F0F0F0"
                     HorizontalOptions="Center"
                     Source="{Binding CredencialFrontalSource, Mode=TwoWay}"
-                    HeightRequest="150"
-                    WidthRequest="140"
+                    HeightRequest="140"
+                    WidthRequest="160"
                     VerticalOptions="Center"
                     />
                     <Image 
@@ -653,8 +653,8 @@
                     BackgroundColor="#F0F0F0"
                     HorizontalOptions="Center"
                     Source="{Binding CredencialPosteriorSource, Mode=TwoWay}"
-                    HeightRequest="150"
-                    WidthRequest="140"
+                    HeightRequest="140"
+                    WidthRequest="160"
                     VerticalOptions="Center"
                     />
                     <Button
