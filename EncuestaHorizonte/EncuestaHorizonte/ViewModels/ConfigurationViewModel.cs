@@ -127,6 +127,10 @@ namespace EncuestaHorizonte.ViewModels
             this.Running = false;
             this.IsVisible = false;
             this.IsRunning = false;
+            if (!Settings.Area.Equals(string.Empty))
+            {
+                this.LugarSelected = Settings.Area;
+            }
         }
         #endregion
 
@@ -154,9 +158,55 @@ namespace EncuestaHorizonte.ViewModels
                 return new RelayCommand(LugarMethod);
             }
         }
+
+        public ICommand DatabaseCommand
+        {
+            get
+            {
+                return new RelayCommand(Database);
+            }
+        }
         #endregion
 
         #region Methods
+        public async void Database()
+        {
+            //Se pregunta al usuario si desea eliminar los registros de la base de datos
+            var respuesta = await Application.Current.MainPage.DisplayAlert(
+                "ERROR",
+                "Desea eliminar todos los registros de la base de datos\n"+
+                "*Debera actualizar los siguientes campos:\n"+
+                "-Lugares\n-Usuarios",
+                "Aceptar",
+                "Cancelar");
+
+            if (respuesta)
+            {
+                //Se Eliminan las tablas de la base de datos
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    conn.DropTable<Afiliado>();
+                    conn.DropTable<Lugares>();
+                    conn.DropTable<Usuarios>();
+                }
+
+                //Eliminar las persistencias del area
+                Settings.Area = string.Empty;
+                Settings.IdArea = string.Empty;
+
+                //Limpiar los lugares
+                this.Lugares.Clear();
+                this.Lugares.Add("Seleccione un lugar");
+                this.LugarSelected = this.Lugares.ElementAt(0);
+            }
+
+            //Se pregunta al usuario si desea eliminar los registros de la base de datos
+            await Application.Current.MainPage.DisplayAlert(
+                "ERROR",
+                "Base de datos limpiada",
+                "Aceptar");
+        }
+
         public async void Actualizar()
         {
             //Se activa el ActivityIndicator
@@ -165,14 +215,14 @@ namespace EncuestaHorizonte.ViewModels
 
             //Validaciones
             //Se validan que los campos no esten vacios
-            if (this.LugarSelected.Equals(string.Empty))
+            /*if (this.LugarSelected.Equals(null))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Area Vacío",
                     "Aceptar");
-            }
-            else if (this.Servidor.Equals(string.Empty))
+            }*/
+            /*else */if (this.Servidor.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -195,28 +245,45 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
-                //Se obtiene el Id del lugar
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                {
-                    var tabla = conn.Table<Lugares>().Where(l => l.Lugar == this.LugarSelected).FirstOrDefault();
-                    Settings.IdArea = tabla.Id.ToString();
-                }
-
                 //Se copian los datos ingresados a una clase de persistencia llamada Settings
                 Settings.Servidor = this.Servidor;
                 Settings.AdminU = this.AdminU;
                 Settings.AdminP = this.AdminP;
-                Settings.Area = this.LugarSelected;
+                
+                if (!this.LugarSelected.Equals(this.Lugares.ElementAt(0)))
+                {
+                    //Se obtiene el Id del lugar
+                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                    {
+                        var tabla = conn.Table<Lugares>().Where(l => l.Lugar == this.LugarSelected).FirstOrDefault();
+                        Settings.IdArea = tabla.Id.ToString();
+                    }
 
-                //Se desactiva el ActivityIndicator
-                this.Visible = false;
-                this.Running = false;
+                    //Colocar en persistencia el lugar seleccionado
+                    Settings.Area = this.LugarSelected;
 
-                //El usuario recibe una mensaje de exito
-                await Application.Current.MainPage.DisplayAlert(
-                    "EXITO",
-                    "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
-                    "Aceptar");
+                    //Se desactiva el ActivityIndicator
+                    this.Visible = false;
+                    this.Running = false;
+
+                    //El usuario recibe una mensaje de exito
+                    await Application.Current.MainPage.DisplayAlert(
+                        "EXITO",
+                        "Los datos han sido actualizados \n\"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
+                        "Aceptar");
+                }
+                else
+                {
+                    //Se desactiva el ActivityIndicator
+                    this.Visible = false;
+                    this.Running = false;
+
+                    //El usuario recibe una mensaje de exito
+                    await Application.Current.MainPage.DisplayAlert(
+                        "EXITO",
+                        "Los datos han sido actualizados \n\"DEBE SELECCIONAR UN LUGAR TAMBIEN (ACTUALICE LOS LUGARES DE SER NECESARIO)\"",
+                        "Aceptar");
+                }
             }
         }
 
@@ -306,14 +373,14 @@ namespace EncuestaHorizonte.ViewModels
                 {
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",
-                        "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
+                        "Los datos han sido actualizados \n\"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
                         "Aceptar");
                 }
                 else
                 {
                     await Application.Current.MainPage.DisplayAlert(
                         "ERROR",
-                        "Los valores recibidos no se almacenaron en el dispositivo",
+                        "Los valores recibidos no se almacenaron en el dispositivo \n\"ASEGURESE DE HABER SELECCIONADO UN LUGAR\"",
                         "Aceptar");
                 }
             }
@@ -369,7 +436,10 @@ namespace EncuestaHorizonte.ViewModels
                 int rows = 0;
 
                 //Reseteo de la instancia de lugares en el XAML
-                this.Lugares = new ObservableCollection<string>();
+                this.Lugares = new ObservableCollection<string>()
+                {
+                    "Seleccione un lugar"
+                };
 
                 //Agregar los lugares a base de datos
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
@@ -393,6 +463,9 @@ namespace EncuestaHorizonte.ViewModels
                     }
                 }
 
+                //Seleccionar el valor por deafult
+                this.LugarSelected = this.Lugares.ElementAt(0);
+
                 //Se desactiva el ActivityIndicator
                 this.RunningLugar = false;
                 this.VisibleLugar = false;
@@ -402,7 +475,7 @@ namespace EncuestaHorizonte.ViewModels
                 {
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",
-                        "Los datos han sido actualizados \"DEBE VOLVER A ABRIR LA APLICACIÓN\"",
+                        "Los datos han sido actualizados \n\"DEBE SELECCIONAR UN LUGAR\"",
                         "Aceptar");
                 }
                 else

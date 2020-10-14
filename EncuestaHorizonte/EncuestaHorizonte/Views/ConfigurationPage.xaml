@@ -35,6 +35,13 @@
                     HorizontalOptions="FillAndExpand"
                     Text="Actualizar Lugares"
                     TextColor="White"/>
+                <BoxView   
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   HeightRequest="1"
+                   WidthRequest="300"  
+                   Margin="0,15,0,15"
+                   Color="#0288D1"/>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>
@@ -152,6 +159,13 @@
                     HorizontalOptions="FillAndExpand"
                     Text="Actualizar"
                     TextColor="White"/>
+                <BoxView   
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   HeightRequest="1"
+                   WidthRequest="300"  
+                   Margin="0,15,0,15"
+                   Color="#0288D1"/>
                 <Frame
                     BackgroundColor="White"
                     Padding="10"
@@ -176,8 +190,22 @@
                     HorizontalOptions="FillAndExpand"
                     Text="Actualizar Usuarios"
                     TextColor="White"/>
+                <BoxView   
+                   VerticalOptions="Center"
+                   HorizontalOptions="CenterAndExpand"
+                   HeightRequest="1"
+                   WidthRequest="300"  
+                   Margin="0,15,0,15"
+                   Color="#0288D1"/>
+                <Button
+                    BackgroundColor="#0288D1"
+                    BorderWidth="3"
+                    Command="{Binding DatabaseCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Limpiar Base de datos interna"
+                    TextColor="White"/>
 
-                
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

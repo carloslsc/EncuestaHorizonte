@@ -44,7 +44,10 @@ namespace EncuestaHorizonte.Views
                     var lista = conn.Table<Lugares>().ToList();
                     if (!lista.Equals(null)) 
                     {
-                        ObservableCollection<string> lugares = new ObservableCollection<string>();
+                        ObservableCollection<string> lugares = new ObservableCollection<string>() 
+                        {
+                            "Seleccione un lugar"
+                        };
 
                         foreach (var item in lista)
                             lugares.Add(item.Lugar);
@@ -54,6 +57,10 @@ namespace EncuestaHorizonte.Views
                         if (!Settings.Area.Equals(string.Empty))
                         {
                             Lugar.SelectedItem = Settings.Area;
+                        }
+                        else
+                        {
+                            Lugar.SelectedItem = lugares.ElementAt(0);
                         }
                     }
 
