@@ -20,7 +20,7 @@ namespace EncuestaHorizonte.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             //No poder tomar screens
-            //this.Window.SetFlags(WindowManagerFlags.Secure, WindowManagerFlags.Secure);
+            this.Window.SetFlags(WindowManagerFlags.Secure, WindowManagerFlags.Secure);
 
             base.OnCreate(savedInstanceState);
 

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using System.Security.Cryptography;
 using Xamarin.Forms;
 
 namespace EncuestaHorizonte.ViewModels
@@ -173,7 +174,7 @@ namespace EncuestaHorizonte.ViewModels
         {
             //Se pregunta al usuario si desea eliminar los registros de la base de datos
             var respuesta = await Application.Current.MainPage.DisplayAlert(
-                "ERROR",
+                "ALERTA",
                 "Desea eliminar todos los registros de la base de datos\n"+
                 "*Debera actualizar los siguientes campos:\n"+
                 "-Lugares\n-Usuarios",
@@ -188,6 +189,7 @@ namespace EncuestaHorizonte.ViewModels
                     conn.DropTable<Afiliado>();
                     conn.DropTable<Lugares>();
                     conn.DropTable<Usuarios>();
+                    conn.DropTable<UsuarioSincronizado>();
                 }
 
                 //Eliminar las persistencias del area
@@ -198,13 +200,13 @@ namespace EncuestaHorizonte.ViewModels
                 this.Lugares.Clear();
                 this.Lugares.Add("Seleccione un lugar");
                 this.LugarSelected = this.Lugares.ElementAt(0);
-            }
 
-            //Se pregunta al usuario si desea eliminar los registros de la base de datos
-            await Application.Current.MainPage.DisplayAlert(
-                "ERROR",
-                "Base de datos limpiada",
-                "Aceptar");
+                //Mensaje para el usuario
+                await Application.Current.MainPage.DisplayAlert(
+                    "ERROR",
+                    "Base de datos limpiada",
+                    "Aceptar");
+            }
         }
 
         public async void Actualizar()
@@ -249,6 +251,7 @@ namespace EncuestaHorizonte.ViewModels
                 Settings.Servidor = this.Servidor;
                 Settings.AdminU = this.AdminU;
                 Settings.AdminP = this.AdminP;
+
                 
                 if (!this.LugarSelected.Equals(this.Lugares.ElementAt(0)))
                 {
@@ -347,7 +350,7 @@ namespace EncuestaHorizonte.ViewModels
                     for (int i = 0; i < list.Count; i++)
                     {
                         //Verificación de lugar
-                        if (list[i].Id_Lugar.Equals(Settings.IdArea))
+                        if (list[i].Id_Lugar.Equals(Int32.Parse(Settings.IdArea)))
                         {
                             //Creación del modelo usuario
                             Usuarios Usuario = new Usuarios()

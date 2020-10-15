@@ -8,6 +8,7 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -300,11 +301,13 @@ namespace EncuestaHorizonte.ViewModels
             //Llenado de los campos de tipo picker
             this.Sexos = new ObservableCollection<string>()
             {
+                "Seleccione un sexo",
                 "Masculino",
                 "Femenino"
             };
             this.EstadosCiviles = new ObservableCollection<string>()
             {
+                "Seleccione un estado civil",
                 "Soltera/o",
                 "Casada/o",
                 "Viuda/o",
@@ -313,6 +316,7 @@ namespace EncuestaHorizonte.ViewModels
             };
             this.Ocupaciones = new ObservableCollection<string>()
             {
+                "Seleccione una ocupación",
                 "Desempleada/o",
                 "Ama de Casa",
                 "Estudiante",
@@ -328,6 +332,7 @@ namespace EncuestaHorizonte.ViewModels
             };
             this.Escolaridades = new ObservableCollection<string>()
             {
+                "Seleccione una escolaridad",
                 "Ninguna",
                 "Preescolar",
                 "Primaria",
@@ -352,15 +357,15 @@ namespace EncuestaHorizonte.ViewModels
             this.NombreSegundo = string.Empty;
             this.ApellidoPat = string.Empty;
             this.ApellidoMat = string.Empty;
-            this.SexoSelected = string.Empty;
+            this.SexoSelected = this.Sexos.ElementAt(0);
             this.Edad = string.Empty;
-            this.EstadoCivilSelected = string.Empty;
+            this.EstadoCivilSelected = this.EstadosCiviles.ElementAt(0);
             this.Domicilio = string.Empty;
             this.TelefonoFijo = string.Empty;
             this.TelefonoCelular = string.Empty;
             this.TelefonoAlter = string.Empty;
-            this.Ocupacion = string.Empty;
-            this.Escolaridad = string.Empty;
+            this.Ocupacion = this.Ocupaciones.ElementAt(0);
+            this.Escolaridad = this.Escolaridades.ElementAt(0);
             this.Email = string.Empty;
             this.NumIne = string.Empty;
             this.ClaveIne = string.Empty;
@@ -602,7 +607,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Apellido Materno Vacío",
                     "Aceptar");
             }
-            else if (this.SexoSelected.Equals(string.Empty))
+            else if (this.SexoSelected.Equals(this.Sexos.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -624,7 +629,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo edad no es númerico",
                     "Aceptar");
             }
-            else if (this.EstadoCivilSelected.Equals(string.Empty))
+            else if (this.EstadoCivilSelected.Equals(this.EstadosCiviles.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -723,14 +728,14 @@ namespace EncuestaHorizonte.ViewModels
                     string.Format("Campo Teléfono Celular tiene {0} digitos y solo deben se 10", this.TelefonoCelular.Length),
                     "Aceptar");
             }
-            else if (this.Ocupacion.Equals(string.Empty))
+            else if (this.Ocupacion.Equals(this.Ocupaciones.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Ocupación Vacío",
                     "Aceptar");
             }
-            else if (this.Escolaridad.Equals(string.Empty))
+            else if (this.Escolaridad.Equals(this.Escolaridades.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -809,12 +814,13 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
-
+                //Creacion de variables por default
                 string id = null;
                 byte[] imageArray = null;
                 byte[] CredencialFArray = null;
                 byte[] CredencialPArray = null;
 
+                //convertir las imagenes en tipo byte[]
                 if (this.file != null)
                 {
                     imageArray = FilesHelper.ReadFully(this.file.GetStream());
@@ -831,17 +837,32 @@ namespace EncuestaHorizonte.ViewModels
                 }
 
                 int rows = 0;
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                try
                 {
-                    conn.CreateTable<Afiliado>();
-                    this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
-                        this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio, 
-                        this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp, 
-                        this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, CredencialFArray, CredencialPArray);
-                    rows += conn.Insert(this.Afiliado);
+                    //Insertar el afiliado
+                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                    {
+                        conn.CreateTable<Afiliado>();
+                        this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
+                            this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
+                            this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
+                            this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, CredencialFArray, CredencialPArray);
+                        rows += conn.Insert(this.Afiliado);
+                    }
                 }
+                catch (Exception e)
+                {
+                    //Mensaje de error con la base de datos
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        e.Message+"\n\nVolver a intentar",
+                        "Aceptar");
+                }
+
+                //Caso positivo
                 if (rows > 0)
                 {
+                    //Resetear los campos
                     this.Municipio = string.Empty;
                     this.Region = string.Empty;
                     this.Zona = string.Empty;
@@ -853,15 +874,15 @@ namespace EncuestaHorizonte.ViewModels
                     this.NombreSegundo = string.Empty;
                     this.ApellidoPat = string.Empty;
                     this.ApellidoMat = string.Empty;
-                    this.SexoSelected = string.Empty;
+                    this.SexoSelected = this.Sexos.ElementAt(0);
                     this.Edad = string.Empty;
-                    this.EstadoCivilSelected = string.Empty;
+                    this.EstadoCivilSelected = this.EstadosCiviles.ElementAt(0);
                     this.Domicilio = string.Empty;
                     this.TelefonoFijo = string.Empty;
                     this.TelefonoCelular = string.Empty;
                     this.TelefonoAlter = string.Empty;
-                    this.Ocupacion = string.Empty;
-                    this.Escolaridad = string.Empty;
+                    this.Ocupacion = this.Ocupaciones.ElementAt(0);
+                    this.Escolaridad = this.Escolaridades.ElementAt(0);
                     this.Email = string.Empty;
                     this.NumIne = string.Empty;
                     this.ClaveIne = string.Empty;

@@ -4,6 +4,7 @@ using EncuestaHorizonte.Services;
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,8 +37,21 @@ namespace EncuestaHorizonte.Views
 
             if (item.Id == 0)
             {
-                //Preguntar al usuario si desea sincronizar
-                var respuesta = await Application.Current.MainPage.DisplayAlert(
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    if (conn.Table<Afiliado>().ToList().Count.Equals(0))
+                    {
+                        ((ListView)sender).SelectedItem = null;
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Error",
+                            "No existen afiliados para sincronizar",
+                            "Aceptar");
+                        return;
+                    }
+                }
+
+                    //Preguntar al usuario si desea sincronizar
+                    var respuesta = await Application.Current.MainPage.DisplayAlert(
                     "ATENCIÓN",
                     "¿Desea Sincronizar la información?",
                     "Aceptar",
@@ -72,53 +86,61 @@ namespace EncuestaHorizonte.Views
                         //Inicializar el objeto de enviado
                         Send Objeto = new Send();
 
-                        using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                        try
                         {
-                            //Obtener todos los afiliados por usuario
-                            var afiliados = conn.Table<Afiliado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).ToList();
-
-                            List<AfiliadoSend> afiliadosSend = new List<AfiliadoSend>();
-                            
-                            foreach (var afiliado in afiliados)
+                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                             {
-                                AfiliadoSend afiliadoSend = new AfiliadoSend()
-                                {
-                                    Nombre = afiliado.Nombre,
-                                    NombreSegundo = afiliado.NombreSegundo,
-                                    ApellidoPat = afiliado.ApellidoPat,
-                                    ApellidoMat = afiliado.ApellidoMat,
-                                    Sexo = afiliado.Sexo,
-                                    Edad = afiliado.Edad,
-                                    EstadoCivil = afiliado.EstadoCivil,
-                                    Domicilio = afiliado.Domicilio,
-                                    Municipio = afiliado.Municipio,
-                                    Region = afiliado.Region,
-                                    Zona = afiliado.Zona,
-                                    Seccion = afiliado.Seccion,
-                                    Casilla = afiliado.Casilla,
-                                    Promotor = afiliado.Promotor,
-                                    Comunidad = afiliado.Comunidad,
-                                    TelefonoFijo = afiliado.TelefonoFijo,
-                                    TelefonoCelular = afiliado.TelefonoCelular,
-                                    TelefonoAlter = afiliado.TelefonoAlter,
-                                    Ocupacion = afiliado.Ocupacion,
-                                    Escolaridad = afiliado.Escolaridad,
-                                    Email = afiliado.Email,
-                                    NumIne = afiliado.NumIne,
-                                    ClaveIne = afiliado.ClaveIne,
-                                    Curp = afiliado.Curp,
-                                    Facebook = afiliado.Facebook,
-                                    Observaciones = afiliado.Observaciones,
-                                    Foto = afiliado.Foto,
-                                    CredencialFrontal = afiliado.CredencialFrontal,
-                                    CredencialPosterior = afiliado.CredencialPosterior
-                                };
+                                //Obtener todos los afiliados por usuario
+                                var afiliados = conn.Table<Afiliado>().Where(a => a.IdUsuario.Equals(Settings.IdUsuario)).ToList();
 
-                                //Agregar un afiliado nuevo a la lista de envio
-                                afiliadosSend.Add(afiliadoSend);
+                                List<AfiliadoSend> afiliadosSend = new List<AfiliadoSend>();
+
+                                foreach (var afiliado in afiliados)
+                                {
+                                    AfiliadoSend afiliadoSend = new AfiliadoSend()
+                                    {
+                                        Nombre = afiliado.Nombre,
+                                        NombreSegundo = afiliado.NombreSegundo,
+                                        ApellidoPat = afiliado.ApellidoPat,
+                                        ApellidoMat = afiliado.ApellidoMat,
+                                        Sexo = afiliado.Sexo,
+                                        Edad = afiliado.Edad,
+                                        EstadoCivil = afiliado.EstadoCivil,
+                                        Domicilio = afiliado.Domicilio,
+                                        Municipio = afiliado.Municipio,
+                                        Region = afiliado.Region,
+                                        Zona = afiliado.Zona,
+                                        Seccion = afiliado.Seccion,
+                                        Casilla = afiliado.Casilla,
+                                        Promotor = afiliado.Promotor,
+                                        Comunidad = afiliado.Comunidad,
+                                        TelefonoFijo = afiliado.TelefonoFijo,
+                                        TelefonoCelular = afiliado.TelefonoCelular,
+                                        TelefonoAlter = afiliado.TelefonoAlter,
+                                        Ocupacion = afiliado.Ocupacion,
+                                        Escolaridad = afiliado.Escolaridad,
+                                        Email = afiliado.Email,
+                                        NumIne = afiliado.NumIne,
+                                        ClaveIne = afiliado.ClaveIne,
+                                        Curp = afiliado.Curp,
+                                        Facebook = afiliado.Facebook,
+                                        Observaciones = afiliado.Observaciones,
+                                        Foto = afiliado.Foto,
+                                        CredencialFrontal = afiliado.CredencialFrontal,
+                                        CredencialPosterior = afiliado.CredencialPosterior
+                                    };
+
+                                    //Agregar un afiliado nuevo a la lista de envio
+                                    afiliadosSend.Add(afiliadoSend);
+                                }
+                                //Agregar la lista de afiliados al objeto a enviar
+                                Objeto.Afiliados = afiliadosSend;
                             }
-                            //Agregar la lista de afiliados al objeto a enviar
-                            Objeto.Afiliados = afiliadosSend;
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
                         }
 
                         //Crear un nuevo usuario para enviar
@@ -147,6 +169,9 @@ namespace EncuestaHorizonte.Views
                             conn.InsertOrReplace(usuario);
                         }
 
+                        DetailPage.Label.Text = objetoResult.Exitosos.TotalExitosos.ToString();
+                        DetailPage.ListView.ItemsSource = new List<Afiliado>();
+
                         //Resultado esperando promovidos repetidos
                         if (objetoResult.Fallidos.Count > 0)
                         {
@@ -159,11 +184,20 @@ namespace EncuestaHorizonte.Views
                             }
 
                             //Eliminacion de los afiliados en la base de datos interna
-                            /*
-                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                            try
                             {
-                                //conn.Delete<Afiliado>();
-                            }*/
+                                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                                {
+                                    conn.DropTable<Afiliado>();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await Application.Current.MainPage.DisplayAlert(
+                                    "ERROR",
+                                    ex.Message,
+                                    "Aceptar");
+                            }
 
                             //Desactivacion del ActivityIndicator
                             MasterPage.ActivityIndicator.IsRunning = false;
@@ -180,11 +214,20 @@ namespace EncuestaHorizonte.Views
                         else
                         {
                             //Eliminacion de los afiliados en la base de datos interna
-                            /*
-                            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                            try
                             {
-                                //conn.Delete<Afiliado>();
-                            }*/
+                                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                                {
+                                    conn.DropTable<Afiliado>();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await Application.Current.MainPage.DisplayAlert(
+                                    "ERROR",
+                                    ex.Message,
+                                    "Aceptar");
+                            }
 
                             //Desactivacion del ActivityIndicator
                             MasterPage.ActivityIndicator.IsRunning = false;

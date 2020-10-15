@@ -124,38 +124,54 @@ namespace EncuestaHorizonte.ViewModels
                 byte[] PasswordBytes = Encoding.ASCII.GetBytes(this.Password);
                 string cryptedPassword = Crypter.Blowfish.Crypt(PasswordBytes, "$2a$07$g0uO0D9wPLBqFWNLwzO5qu");
 
-                //Validación de los campos de XAML con los usuarios de la tabla
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                try
                 {
-                    //Obtención del usuario correcto de la tabla
-                    var usuarioCorrecto = conn.Table<Usuarios>().Where(u => u.Usuario.Equals(this.Email) && u.Password.Equals(cryptedPassword)).FirstOrDefault();
+                    //Validación de los campos de XAML con los usuarios de la tabla
+                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                    {
+                        //Obtención del usuario correcto de la tabla
+                        var usuarioCorrecto = conn.Table<Usuarios>().Where(u => u.Usuario.Equals(this.Email) && u.Password.Equals(cryptedPassword)).FirstOrDefault();
 
+                        //Desactivavión del ActivityIndicator
+                        this.IsRunning = false;
+                        this.Visible = false;
+
+                        //Verificación de la existencia del usuario
+                        if (usuarioCorrecto != null)
+                        {
+                            //Vaciado de los campos en XAML
+                            this.Email = string.Empty;
+                            this.Password = string.Empty;
+
+                            //Creación de la persistencia del Idusuario y nombre
+                            Settings.IdUsuario = usuarioCorrecto.Id.ToString();
+                            Settings.Nombre = usuarioCorrecto.Nombre;
+
+                            //Cambio de página
+                            Application.Current.MainPage = new NavigationPage(new InicioPage());
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert(
+                                "ERROR",
+                                "Usuario y/o Contraseña Invalidos",
+                                "Aceptar");
+                            return;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
                     //Desactivavión del ActivityIndicator
                     this.IsRunning = false;
                     this.Visible = false;
 
-                    //Verificación de la existencia del usuario
-                    if (usuarioCorrecto != null)
-                    {
-                        //Vaciado de los campos en XAML
-                        this.Email = string.Empty;
-                        this.Password = string.Empty;
-
-                        //Creación de la persistencia del Idusuario y nombre
-                        Settings.IdUsuario = usuarioCorrecto.Id.ToString();
-                        Settings.Nombre = usuarioCorrecto.Nombre;
-
-                        //Cambio de página
-                        Application.Current.MainPage = new NavigationPage(new InicioPage());
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert(
-                            "ERROR",
-                            "Usuario y/o Contraseña Invalidos",
-                            "Aceptar");
-                        return;
-                    }
+                    //Mensaje para el usuario
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        "Se requiere entrar a configuración para obtener los usuarios",
+                        "Aceptar");
+                    return;
                 }
                 
             }

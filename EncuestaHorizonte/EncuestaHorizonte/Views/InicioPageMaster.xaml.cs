@@ -17,7 +17,7 @@ namespace EncuestaHorizonte.Views
     {
         public ListView ListView;
         public ActivityIndicator ActivityIndicator;
-
+        
         public InicioPageMaster()
         {
             InitializeComponent();

@@ -46,7 +46,7 @@ namespace EncuestaHorizonte.Helpers
             }
             set
             {
-                AppSettings.AddOrUpdateValue(IdArea, value);
+                AppSettings.AddOrUpdateValue(idArea, value);
             }
         }
 

@@ -11,7 +11,7 @@
   <MasterDetailPage.Detail>
     <NavigationPage>
       <x:Arguments>
-        <pages:InicioPageDetail />
+        <pages:InicioPageDetail x:Name="DetailPage"/>
       </x:Arguments>
     </NavigationPage>
   </MasterDetailPage.Detail>

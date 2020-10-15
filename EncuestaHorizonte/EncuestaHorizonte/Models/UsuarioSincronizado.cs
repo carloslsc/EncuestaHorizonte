@@ -7,10 +7,11 @@ namespace EncuestaHorizonte.Models
 {
     public class UsuarioSincronizado
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        
         public int IdUsuario { get; set; }
         
-        [PrimaryKey]
         public int Exitosos { get; set; }
     }
 }

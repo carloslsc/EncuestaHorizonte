@@ -31,57 +31,65 @@ namespace EncuestaHorizonte.Views
         {
             base.OnAppearing();
 
-            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            try
             {
-                conn.CreateTable<Afiliado>();
-                var Afiliado = conn.Table<Afiliado>().Where(x => x.Id.Equals(TheAfi.Id)).FirstOrDefault();
-                Settings.Id = Afiliado.Id.ToString();
-                Municipio.Text = Afiliado.Municipio;
-                Region.Text = Afiliado.Region;
-                Zona.Text = Afiliado.Zona;
-                Seccion.Text = Afiliado.Seccion;
-                Casilla.Text = Afiliado.Casilla;
-                Promotor.Text = Afiliado.Promotor;
-                Comunidad.Text = Afiliado.Comunidad;
-                Nombre.Text = Afiliado.Nombre;
-                NombreSegundo.Text = Afiliado.NombreSegundo;
-                ApellidoPat.Text = Afiliado.ApellidoPat;
-                ApellidoMat.Text = Afiliado.ApellidoMat;
-                Edad.Text = Afiliado.Edad;
-                Sexo.SelectedItem = Afiliado.Sexo;
-                EstadoCivil.SelectedItem = Afiliado.EstadoCivil;
-                Domicilio.Text = Afiliado.Domicilio;
-                TelefonoFijo.Text = Afiliado.TelefonoFijo;
-                TelefonoCelular.Text = Afiliado.TelefonoCelular;
-                TelefonoAlter.Text = Afiliado.TelefonoAlter;
-                Ocupacion.SelectedItem = Afiliado.Ocupacion;
-                Escolaridad.SelectedItem = Afiliado.Escolaridad;
-                Email.Text = Afiliado.Email;
-                NumIne.Text = Afiliado.NumIne;
-                ClaveIne.Text = Afiliado.ClaveIne;
-                Curp.Text = Afiliado.Curp;
-                Facebook.Text = Afiliado.Facebook;
-                Observacion.Text = Afiliado.Observaciones;
-
-                Image.Source = "no_image";
-                CredencialFrontal.Source = "no_image";
-                CredencialPosterior.Source = "no_image";
-
-                try
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    if (!Afiliado.Foto.Equals(null))
-                        Image.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.Foto));
+                    conn.CreateTable<Afiliado>();
+                    var Afiliado = conn.Table<Afiliado>().Where(x => x.Id.Equals(TheAfi.Id)).FirstOrDefault();
+                    Settings.Id = Afiliado.Id.ToString();
+                    Municipio.Text = Afiliado.Municipio;
+                    Region.Text = Afiliado.Region;
+                    Zona.Text = Afiliado.Zona;
+                    Seccion.Text = Afiliado.Seccion;
+                    Casilla.Text = Afiliado.Casilla;
+                    Promotor.Text = Afiliado.Promotor;
+                    Comunidad.Text = Afiliado.Comunidad;
+                    Nombre.Text = Afiliado.Nombre;
+                    NombreSegundo.Text = Afiliado.NombreSegundo;
+                    ApellidoPat.Text = Afiliado.ApellidoPat;
+                    ApellidoMat.Text = Afiliado.ApellidoMat;
+                    Edad.Text = Afiliado.Edad;
+                    Sexo.SelectedItem = Afiliado.Sexo;
+                    EstadoCivil.SelectedItem = Afiliado.EstadoCivil;
+                    Domicilio.Text = Afiliado.Domicilio;
+                    TelefonoFijo.Text = Afiliado.TelefonoFijo;
+                    TelefonoCelular.Text = Afiliado.TelefonoCelular;
+                    TelefonoAlter.Text = Afiliado.TelefonoAlter;
+                    Ocupacion.SelectedItem = Afiliado.Ocupacion;
+                    Escolaridad.SelectedItem = Afiliado.Escolaridad;
+                    Email.Text = Afiliado.Email;
+                    NumIne.Text = Afiliado.NumIne;
+                    ClaveIne.Text = Afiliado.ClaveIne;
+                    Curp.Text = Afiliado.Curp;
+                    Facebook.Text = Afiliado.Facebook;
+                    Observacion.Text = Afiliado.Observaciones;
 
-                    if (!Afiliado.CredencialFrontal.Equals(null))
-                        CredencialFrontal.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialFrontal));
+                    Image.Source = "no_image";
+                    CredencialFrontal.Source = "no_image";
+                    CredencialPosterior.Source = "no_image";
 
-                    if (!Afiliado.CredencialPosterior.Equals(null))
-                        CredencialPosterior.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialPosterior));
+                    try
+                    {
+                        if (!Afiliado.Foto.Equals(null))
+                            Image.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.Foto));
+
+                        if (!Afiliado.CredencialFrontal.Equals(null))
+                            CredencialFrontal.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialFrontal));
+
+                        if (!Afiliado.CredencialPosterior.Equals(null))
+                            CredencialPosterior.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialPosterior));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception)
+            {
 
-                }
+                throw;
             }
         }
     }
