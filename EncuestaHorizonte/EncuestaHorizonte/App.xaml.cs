@@ -18,7 +18,9 @@ namespace EncuestaHorizonte
         {
             try
             {
-                var status = await Permissions.RequestAsync<Permissions.Camera>();
+                await Permissions.RequestAsync<Permissions.Camera>();
+                await Permissions.RequestAsync<Permissions.StorageRead>();
+                await Permissions.RequestAsync<Permissions.StorageWrite>();
             }
             catch (Exception ex)
             {

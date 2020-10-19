@@ -28,7 +28,7 @@
                     IsRunning="{Binding RunningLugar, Mode=TwoWay}"
                     VerticalOptions="CenterAndExpand"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding LugaresCommand}"
                     HeightRequest="50"
@@ -41,7 +41,7 @@
                    HeightRequest="1"
                    WidthRequest="300"  
                    Margin="0,15,0,15"
-                   Color="#0288D1"/>
+                   Color="#012d40"/>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>
@@ -152,7 +152,7 @@
                     IsRunning="{Binding Running, Mode=TwoWay}"
                     VerticalOptions="CenterAndExpand"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding ActualizarCommand}"
                     HeightRequest="50"
@@ -165,7 +165,7 @@
                    HeightRequest="1"
                    WidthRequest="300"  
                    Margin="0,15,0,15"
-                   Color="#0288D1"/>
+                   Color="#012d40"/>
                 <Frame
                     BackgroundColor="White"
                     Padding="10"
@@ -183,7 +183,7 @@
                     IsRunning="{Binding IsRunning, Mode=TwoWay}"
                     VerticalOptions="CenterAndExpand"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding UsuariosCommand}"
                     HeightRequest="50"
@@ -196,9 +196,9 @@
                    HeightRequest="1"
                    WidthRequest="300"  
                    Margin="0,15,0,15"
-                   Color="#0288D1"/>
+                   Color="#012d40"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding DatabaseCommand}"
                     HeightRequest="50"

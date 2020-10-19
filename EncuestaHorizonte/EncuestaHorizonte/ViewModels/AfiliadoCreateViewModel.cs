@@ -8,6 +8,7 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,6 +25,9 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Attributes
+        private int perfilTomado;
+        private int frontalTomado;
+        private int posteriorTomado;
         private string municipio;
         private string region;
         private string zona;
@@ -221,7 +225,11 @@ namespace EncuestaHorizonte.ViewModels
                 {
                     this.telefonoAlter = value;
                     OnPropertyChanged();
-                    this.TelefonoAlter = TelefonoFormat(this.TelefonoAlter);
+                    long num = 0;
+                    if (this.TelefonoAlter.Length.Equals(10) && Int64.TryParse(this.TelefonoAlter, out num))
+                    {
+                        this.TelefonoAlter = TelefonoFormat(this.TelefonoAlter);
+                    }
                 }
             }
         }
@@ -298,6 +306,10 @@ namespace EncuestaHorizonte.ViewModels
         {
             this.helperAfiliado = new FullAfiliado();
 
+            this.perfilTomado = 0;
+            this.frontalTomado = 0;
+            this.posteriorTomado = 0;
+
             //Llenado de los campos de tipo picker
             this.Sexos = new ObservableCollection<string>()
             {
@@ -344,7 +356,7 @@ namespace EncuestaHorizonte.ViewModels
                 "Profesional",
                 "Posgrado"
             };
-
+            
             //Seteo de todos los elementos del XAML
             this.Municipio = string.Empty;
             this.Region = string.Empty;
@@ -456,11 +468,14 @@ namespace EncuestaHorizonte.ViewModels
                 this.file = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
-                        Name = "test.jpg",
-                        PhotoSize = PhotoSize.Small
+                        Name = "fotoPerfil.jpg",
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.perfilTomado++;
 
             //Pasar la imagen tomada a la vista XAML
             if (this.file != null)
@@ -470,7 +485,7 @@ namespace EncuestaHorizonte.ViewModels
                     var stream = file.GetStream();
                     return stream;
                 });
-            }
+            }            
         }
 
         public async void SelectCredencialFrontal()
@@ -485,11 +500,15 @@ namespace EncuestaHorizonte.ViewModels
                 this.credencialFrontalfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
+                        //Directory = "Sample",
                         Name = "testCredencialF.jpg",
-                        PhotoSize = PhotoSize.Small
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.frontalTomado++;
 
             //Pasar la imagen tomada a la vista XAML
             if (this.credencialFrontalfile != null)
@@ -515,11 +534,14 @@ namespace EncuestaHorizonte.ViewModels
                 this.credencialPosteriorfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
                         Name = "testCredencialP.jpg",
-                        PhotoSize = PhotoSize.Small
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false,
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.posteriorTomado++;
 
             //Pasar la imagen tomada a la vista XAML
             if (this.credencialPosteriorfile != null)
@@ -721,7 +743,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Aceptar");
             }
             //Validacion de tamaño de la cadena
-            else if (this.TelefonoCelular.Length.Equals(10))
+            else if (!this.TelefonoCelular.Length.Equals(14))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -823,18 +845,51 @@ namespace EncuestaHorizonte.ViewModels
                 //convertir las imagenes en tipo byte[]
                 if (this.file != null)
                 {
+
                     imageArray = FilesHelper.ReadFully(this.file.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/fotoPerfil.jpg");
+                    if (this.perfilTomado > 1)
+                    {
+                        for (int i = 1; i < this.perfilTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/fotoPerfil_{0}.jpg",i));
+                        }
+                    }
+                    this.file.Dispose();
                 }
 
                 if (this.credencialFrontalfile != null)
                 {
                     CredencialFArray = FilesHelper.ReadFully(this.credencialFrontalfile.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialF.jpg");
+                    if (this.frontalTomado > 1)
+                    {
+                        for (int i = 1; i < this.frontalTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialF_{0}.jpg", i));
+                        }
+                    }
+                    this.credencialFrontalfile.Dispose();
+                    
                 }
 
                 if (this.credencialPosteriorfile != null)
                 {
                     CredencialPArray = FilesHelper.ReadFully(this.credencialPosteriorfile.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialP.jpg");
+                    if (this.posteriorTomado > 1)
+                    {
+                        for (int i = 1; i < this.posteriorTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialP_{0}.jpg", i));
+                        }
+                    }
+                    this.credencialPosteriorfile.Dispose();
                 }
+
+                this.perfilTomado = 0;
+                this.frontalTomado = 0;
+                this.posteriorTomado = 0;
 
                 int rows = 0;
                 try
@@ -843,6 +898,7 @@ namespace EncuestaHorizonte.ViewModels
                     using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                     {
                         conn.CreateTable<Afiliado>();
+                        this.Afiliado = new Afiliado();
                         this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
                             this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
                             this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
@@ -892,6 +948,9 @@ namespace EncuestaHorizonte.ViewModels
                     this.ImageSource = "no_image";
                     this.CredencialFrontalSource = "no_image";
                     this.CredencialPosteriorSource = "no_image";
+                    this.file = null;
+                    this.credencialFrontalfile = null;
+                    this.credencialPosteriorfile = null;
 
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",

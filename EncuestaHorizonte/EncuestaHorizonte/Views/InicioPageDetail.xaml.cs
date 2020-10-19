@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -33,6 +33,17 @@ namespace EncuestaHorizonte.Views
             base.OnAppearing();
 
             Exitosos.Text = "0";
+            try
+            {
+                Nombre.Text = SecureStorage.GetAsync("nombre_secure_storage").Result;
+            }
+            catch (Exception ex)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    ex.Message,
+                    "Aceptar");
+            }
 
             try
             {

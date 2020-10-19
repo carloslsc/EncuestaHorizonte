@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -30,16 +30,6 @@ namespace EncuestaHorizonte.Views
             {
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
-                    /*
-                    conn.CreateTable<Lotes>();
-                    int area = int.Parse(Settings.Area);
-                    var Lotes = conn.Table<Lotes>().Where(x => x.IdArea == area).ToList();
-                    ObservableCollection<int> cables = new ObservableCollection<int>();
-                    foreach (var item in Lotes)
-                        if (!cables.Contains(item.IdCable))
-                            cables.Add(item.IdCable);
-                    Cable.ItemsSource = cables;
-                    */
                     conn.CreateTable<Lugares>();
                     var lista = conn.Table<Lugares>().ToList();
                     if (!lista.Equals(null)) 
@@ -54,14 +44,27 @@ namespace EncuestaHorizonte.Views
 
                         Lugar.ItemsSource = lugares;
 
-                        if (!Settings.Area.Equals(string.Empty))
+                        try
                         {
-                            Lugar.SelectedItem = Settings.Area;
+                            var areaStorage = SecureStorage.GetAsync("area_secure_storage");
+                            if (!areaStorage.Equals(string.Empty))
+                            {
+                                Lugar.SelectedItem = areaStorage.Result;
+                            }
+                            else
+                            {
+                                Lugar.SelectedItem = lugares.ElementAt(0);
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            Lugar.SelectedItem = lugares.ElementAt(0);
+                            Application.Current.MainPage.DisplayAlert(
+                                "Error",
+                                ex.Message,
+                                "Acepttar");
                         }
+
+                        
                     }
 
                 }

@@ -11,9 +11,9 @@
       BindingContext="{Binding Inicio}"
       Padding="10">
         <Label
+            x:Name="Nombre"
             FontSize="Medium"
             HorizontalOptions="CenterAndExpand"
-            Text="{Binding Usuario, Mode=TwoWay}"
             TextColor="Black"
             />
         <Grid HorizontalOptions="CenterAndExpand">
@@ -45,7 +45,7 @@
                 x:Name="Lista"
                 VerticalOptions="StartAndExpand"
                 SelectedItem="{Binding Afi, Mode=TwoWay}"
-                SeparatorColor="#0288D1"
+                SeparatorColor="#012d40"
                 RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -115,7 +115,7 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#33566b"
                     BorderWidth="3"
                     Command="{Binding EditarCommand}"
                     Grid.Column="0"
@@ -123,7 +123,7 @@
                     Text="Editar"
                     TextColor="White"/>
             <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding CapturarCommand}"
                     Grid.Column="1"

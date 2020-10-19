@@ -8,7 +8,10 @@ using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -21,6 +24,9 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Attributes
+        private int perfilTomado;
+        private int frontalTomado;
+        private int posteriorTomado;
         private string municipio;
         private string region;
         private string zona;
@@ -184,19 +190,47 @@ namespace EncuestaHorizonte.ViewModels
         public string TelefonoFijo
         {
             get { return this.telefonoFijo; }
-            set { SetValue(ref this.telefonoFijo, value); }
+            set
+            {
+                if (this.telefonoFijo != value)
+                {
+                    this.telefonoFijo = value;
+                    OnPropertyChanged();
+                    this.TelefonoFijo = TelefonoFormat(this.TelefonoFijo);
+                }
+            }
         }
 
         public string TelefonoCelular
         {
             get { return this.telefonoCelular; }
-            set { SetValue(ref this.telefonoCelular, value); }
+            set
+            {
+                if (this.telefonoCelular != value)
+                {
+                    this.telefonoCelular = value;
+                    OnPropertyChanged();
+                    this.TelefonoCelular = TelefonoFormat(this.TelefonoCelular);
+                }
+            }
         }
 
         public string TelefonoAlter
         {
             get { return this.telefonoAlter; }
-            set { SetValue(ref this.telefonoAlter, value); }
+            set
+            {
+                if (this.telefonoAlter != value)
+                {
+                    this.telefonoAlter = value;
+                    OnPropertyChanged();
+                    long num = 0;
+                    if (this.TelefonoAlter.Length.Equals(10) && Int64.TryParse(this.TelefonoAlter, out num))
+                    {
+                        this.TelefonoAlter = TelefonoFormat(this.TelefonoAlter);
+                    }
+                }
+            }
         }
 
         public ObservableCollection<string> Ocupaciones
@@ -269,18 +303,26 @@ namespace EncuestaHorizonte.ViewModels
         #region Constructor
         public AfiliadoEditViewModel()
         {
-            //this.file = null;
             this.helperAfiliado = new FullAfiliado();
-            this.FotoSource = "no_image";
-            this.CredencialFrontalSource = "no_image";
-            this.CredencialPosteriorSource = "no_image";
+
+            this.FotoSource = null;
+            this.CredencialPosteriorSource = null;
+            this.credencialFrontalSource = null;
+
+            this.perfilTomado = 0;
+            this.frontalTomado = 0;
+            this.posteriorTomado = 0;
+
+            //Llenado de los campos de tipo picker
             this.Sexos = new ObservableCollection<string>()
             {
+                "Seleccione un sexo",
                 "Masculino",
                 "Femenino"
             };
             this.EstadosCiviles = new ObservableCollection<string>()
             {
+                "Seleccione un estado civil",
                 "Soltera/o",
                 "Casada/o",
                 "Viuda/o",
@@ -289,6 +331,7 @@ namespace EncuestaHorizonte.ViewModels
             };
             this.Ocupaciones = new ObservableCollection<string>()
             {
+                "Seleccione una ocupación",
                 "Desempleada/o",
                 "Ama de Casa",
                 "Estudiante",
@@ -304,6 +347,7 @@ namespace EncuestaHorizonte.ViewModels
             };
             this.Escolaridades = new ObservableCollection<string>()
             {
+                "Seleccione una escolaridad",
                 "Ninguna",
                 "Preescolar",
                 "Primaria",
@@ -370,12 +414,30 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Cancelar()
         {
-            //Application.Current.MainPage = new InicioPage();
+            //Devolver a la página anterior
             await Application.Current.MainPage.Navigation.PopAsync();
+        }
+
+        public string TelefonoFormat(string telefono)
+        {
+            try
+            {
+                //Darle el formato a la cadena telefono
+                string telefonoFinal = Regex.Replace(telefono, @"(\d{3})(\d{3})(\d{4})", "($1) $2-$3");
+
+                //Implementar el cambio de formato
+                return telefonoFinal;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public async void Delete()
         {
+            //Preguntar al usuario si desea eliminar afiliado
             var respuesta = await Application.Current.MainPage.DisplayAlert(
                     "ALERTA",
                     "¿Desea eliminar al afiliado?",
@@ -384,21 +446,27 @@ namespace EncuestaHorizonte.ViewModels
             if (respuesta)
             {
                 int rows = 0;
-                //var aff = this.Afiliado;
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
+                    //Crear un objeto para eliminar
                     this.Afiliado = new Afiliado();
+
+                    //Colocando un ID al objeto a eliminar
                     this.Afiliado.Id = int.Parse(Settings.Id);
+                    
+                    //Eliminar al promovido
                     conn.CreateTable<Afiliado>();
                     rows += conn.Delete(this.Afiliado);
 
                     if (rows > 0)
                     {
+                        //Mensaje para el usuario
                         await Application.Current.MainPage.DisplayAlert(
                             "EXITO",
                             "El afiliado fue eliminado",
                             "Aceptar");
             
+                        //Regresando al usuario a la pagina principal
                         await Application.Current.MainPage.Navigation.PopAsync();
                     }
                 }
@@ -409,18 +477,26 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void SelectImage()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.file = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
-                        Name = "test.jpg",
-                        PhotoSize = PhotoSize.Small
+                        Name = "fotoPerfilEdit.jpg",
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.perfilTomado++;
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.file != null)
             {
                 this.FotoSource = ImageSource.FromStream(() =>
@@ -433,18 +509,27 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void SelectCredencialFrontal()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.credencialFrontalfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
-                        Name = "testCredencialF.jpg",
-                        PhotoSize = PhotoSize.Small
+                        //Directory = "Sample",
+                        Name = "testCredencialFEdit.jpg",
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.frontalTomado++;
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.credencialFrontalfile != null)
             {
                 this.CredencialFrontalSource = ImageSource.FromStream(() =>
@@ -458,18 +543,26 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void SelectCredencialPosterior()
         {
+            //Inicializar el servicio de CrossMedia
             await CrossMedia.Current.Initialize();
 
+            //Preguntar si la camara esta disponible
             if (CrossMedia.Current.IsCameraAvailable)
             {
+                //Obtener la imagen de la camara
                 this.credencialPosteriorfile = await CrossMedia.Current.TakePhotoAsync(
                     new StoreCameraMediaOptions
                     {
-                        Directory = "Sample",
-                        Name = "testCredencialP.jpg",
-                        PhotoSize = PhotoSize.Small
+                        Name = "testCredencialPEdit.jpg",
+                        PhotoSize = PhotoSize.Small,
+                        SaveToAlbum = false,
                     });
             }
+
+            //acumulador para contar las fotos tomadas
+            this.posteriorTomado++;
+
+            //Pasar la imagen tomada a la vista XAML
             if (this.credencialPosteriorfile != null)
             {
                 this.CredencialPosteriorSource = ImageSource.FromStream(() =>
@@ -482,16 +575,20 @@ namespace EncuestaHorizonte.ViewModels
 
         public async void Editar()
         {
+            //Variable para la validacion de campos numericos
             int num = 0;
 
+            //Obtener las imagenes del XAML
             var imageFotoPerfil = this.FotoSource as FileImageSource;
             var imageCredencialFrontal = this.CredencialFrontalSource as FileImageSource;
             var imageCredencialPosterior = this.CredencialPosteriorSource as FileImageSource;
 
+            //Obtencion de las rutas de las imagenes de XAML
             string fotoRuta = string.Empty;
             string credencialFRuta = string.Empty;
             string credencialPRuta = string.Empty;
 
+            //Verificaciones de las cadenas de ruta de imagenes de XAML
             if (imageFotoPerfil == null)
             {
                 fotoRuta = "0";
@@ -518,6 +615,9 @@ namespace EncuestaHorizonte.ViewModels
             {
                 credencialPRuta = "no_image";
             }
+
+            //Validaciones
+            //Validacion de Imagen de foto de perfil
             if (fotoRuta.Equals("no_image"))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -525,6 +625,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Se necesita una foto de perfil",
                     "Aceptar");
             }
+            //Validaciones de campos vacios
             else if (this.Nombre.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -546,7 +647,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Apellido Materno Vacío",
                     "Aceptar");
             }
-            else if (this.SexoSelected.Equals(string.Empty))
+            else if (this.SexoSelected.Equals(this.Sexos.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -560,6 +661,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Edad Vacío",
                     "Aceptar");
             }
+            //Validacion de campo numerico
             else if (!Int32.TryParse(this.Edad, out num))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -567,7 +669,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo edad no es númerico",
                     "Aceptar");
             }
-            else if (this.EstadoCivilSelected.Equals(string.Empty))
+            else if (this.EstadoCivilSelected.Equals(this.EstadosCiviles.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -650,36 +752,30 @@ namespace EncuestaHorizonte.ViewModels
                     "ERROR",
                     "Campo Domicilio Vacío",
                     "Aceptar");
-            }/*
-            else if (this.TelefonoFijo.Equals(string.Empty))
-            {
-                await Application.Current.MainPage.DisplayAlert(
-                    "ERROR",
-                    "Campo Teléfono Fijo Vacío",
-                    "Aceptar");
-            }*/
+            }
             else if (this.TelefonoCelular.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Teléfono Celular Vacío",
                     "Aceptar");
-            }/*
-            else if (this.TelefonoAlter.Equals(string.Empty))
+            }
+            //Validacion de tamaño de la cadena
+            else if (!this.TelefonoCelular.Length.Equals(14))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Teléfono Alterno/Radio Vacío",
+                    "Campo Teléfono Celular Vacío",
                     "Aceptar");
-            }*/
-            else if (this.Ocupacion.Equals(string.Empty))
+            }
+            else if (this.Ocupacion.Equals(this.Ocupaciones.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
                     "Campo Ocupación Vacío",
                     "Aceptar");
             }
-            else if (this.Escolaridad.Equals(string.Empty))
+            else if (this.Escolaridad.Equals(this.Escolaridades.ElementAt(0)))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -758,53 +854,108 @@ namespace EncuestaHorizonte.ViewModels
             }
             else
             {
+                //Creacion de variables por default
+                string id = Settings.Id;
                 byte[] imageArray = null;
-                byte[] CredencialFArray = null;
-                byte[] CredencialPArray = null;
+                byte[] credencialFArray = null;
+                byte[] credencialPArray = null;
 
-                                
+                //Obtener las imagenes del promovido ya en base de datos
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    var afiliado = conn.Table<Afiliado>().Where(a => a.Id.Equals(id)).FirstOrDefault();
+                    imageArray = afiliado.Foto;
+                    credencialFArray = afiliado.CredencialFrontal;
+                    credencialPArray = afiliado.CredencialPosterior;
+                }
+
+                //convertir las imagenes en tipo byte[]
                 if (this.file != null)
                 {
                     imageArray = FilesHelper.ReadFully(this.file.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/fotoPerfilEdit.jpg");
+                    if (this.perfilTomado > 1)
+                    {
+                        for (int i = 1; i < this.perfilTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/fotoPerfilEdit_{0}.jpg", i));
+                        }
+                    }
+                    this.file.Dispose();
+                    this.file = null;
                 }
 
                 if (this.credencialFrontalfile != null)
                 {
-                    CredencialFArray = FilesHelper.ReadFully(this.credencialFrontalfile.GetStream());
+                    credencialFArray = FilesHelper.ReadFully(this.credencialFrontalfile.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialFEdit.jpg");
+                    if (this.frontalTomado > 1)
+                    {
+                        for (int i = 1; i < this.frontalTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialFEdit_{0}.jpg", i));
+                        }
+                    }
+                    this.credencialFrontalfile.Dispose();
+                    this.credencialFrontalfile = null;
                 }
 
                 if (this.credencialPosteriorfile != null)
                 {
-                    CredencialPArray = FilesHelper.ReadFully(this.credencialPosteriorfile.GetStream());
+                    credencialPArray = FilesHelper.ReadFully(this.credencialPosteriorfile.GetStream());
+                    File.Delete("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialPEdit.jpg");
+                    if (this.posteriorTomado > 1)
+                    {
+                        for (int i = 1; i < this.posteriorTomado; i++)
+                        {
+                            File.Delete(string.Format("/storage/emulated/0/Android/data/com.companyname.encuestahorizonte/files/Pictures/testCredencialPEdit_{0}.jpg", i));
+                        }
+                    }
+                    this.credencialPosteriorfile.Dispose();
+                    this.credencialPosteriorfile = null;
                 }
 
+                this.perfilTomado = 0;
+                this.frontalTomado = 0;
+                this.posteriorTomado = 0;
+
                 int rows = 0;
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                try
                 {
-                    //var asfs = this.Afiliado;
-                    conn.CreateTable<Afiliado>();
-                    //string id = asfs.Id.ToString();
-                    string id = Settings.Id;
-                    this.Afiliado = new Afiliado();
-                    this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
-                        this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
-                        this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
-                        this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, CredencialFArray, CredencialPArray);
-                    rows += conn.Update(this.Afiliado);
+                    //Actualizar el afiliado
+                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                    {
+                        conn.CreateTable<Afiliado>();
+                        this.Afiliado = new Afiliado();
+                        this.Afiliado = this.helperAfiliado.Llenado(id, this.Municipio, this.Region, this.Zona, this.Seccion, this.Casilla, this.Promotor, this.Comunidad,
+                            this.Nombre, this.NombreSegundo, this.ApellidoPat, this.ApellidoMat, this.SexoSelected, this.Edad, this.EstadoCivilSelected, this.Domicilio,
+                            this.TelefonoFijo, this.TelefonoCelular, this.TelefonoAlter, this.Ocupacion, this.Escolaridad, this.Email, this.NumIne, this.ClaveIne, this.Curp,
+                            this.Facebook, this.Observacion, Settings.IdUsuario, imageArray, credencialFArray, credencialPArray);
+                        rows += conn.Update(this.Afiliado);
                     
+                    }
                 }
+                catch (Exception e)
+                {
+                    //Mensaje de error con la base de datos
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        e.Message + "\n\nVolver a intentar",
+                        "Aceptar");
+                }
+
                 if (rows > 0)
                 {
                     await Application.Current.MainPage.DisplayAlert(
                         "EXITO",
-                        "Edición Exitosa",
+                        "Actualización Exitosa",
                         "Aceptar");
                 }
                 else
                 {
                     await Application.Current.MainPage.DisplayAlert(
                        "ERROR",
-                       "La Creación Falló",
+                       "La Actualización Falló",
                        "Aceptar");
                 }
             }

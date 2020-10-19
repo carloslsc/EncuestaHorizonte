@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -258,7 +258,18 @@ namespace EncuestaHorizonte.Views
                 //Eliminar las persistencias usadas
                 Settings.IdUsuario = string.Empty;
                 Settings.Id = string.Empty;
-                Settings.Nombre = string.Empty;
+                try
+                {
+                    await SecureStorage.SetAsync("nombre_secure_storage", string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Error",
+                        ex.Message,
+                        "Aceptar");
+                }
+                //Settings.Nombre = string.Empty;
 
                 //Cambio de pagina
                 if (respuesta)

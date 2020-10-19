@@ -11,6 +11,7 @@ using SQLite;
 using EncuestaHorizonte.Models;
 using CryptSharp;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace EncuestaHorizonte.ViewModels
 {
@@ -21,6 +22,8 @@ namespace EncuestaHorizonte.ViewModels
         #endregion
 
         #region Attributes
+        private string usuario;
+        private string contra;
         private string email;
         private string password;
         private bool visible;
@@ -75,8 +78,21 @@ namespace EncuestaHorizonte.ViewModels
         #region Methods
         public async void Login()
         {
+            try
+            {
+                usuario = SecureStorage.GetAsync("adminu_secure_storage").Result;
+                contra = SecureStorage.GetAsync("adminp_secure_storage").Result;
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    ex.Message,
+                    "Aceptar");
+            }
+
             //Acceso a la configuración cuando la app nunca se ha usado
-            if (Settings.AdminU.Equals(string.Empty) || Settings.AdminP.Equals(string.Empty))
+            if (usuario.Equals(string.Empty) || contra.Equals(string.Empty))
             {
                 //Vaciado de campos en XAML
                 this.Email = string.Empty;
@@ -105,7 +121,7 @@ namespace EncuestaHorizonte.ViewModels
                 return;
             }
             //Validación del usuario y contraseña del admin
-            else if (this.Email.Equals(Settings.AdminU) && this.Password.Equals(Settings.AdminP))
+            else if (this.Email.Equals(usuario) && this.Password.Equals(contra))
             {
                 //Vaciado de campos
                 this.Email = string.Empty;
@@ -145,7 +161,18 @@ namespace EncuestaHorizonte.ViewModels
 
                             //Creación de la persistencia del Idusuario y nombre
                             Settings.IdUsuario = usuarioCorrecto.Id.ToString();
-                            Settings.Nombre = usuarioCorrecto.Nombre;
+                            try
+                            {
+                                await SecureStorage.SetAsync("nombre_secure_storage", usuarioCorrecto.Nombre);
+                            }
+                            catch (Exception ex)
+                            {
+                                await Application.Current.MainPage.DisplayAlert(
+                                    "Error",
+                                    ex.Message,
+                                    "Aceptar");
+                            }
+                            //Settings.Nombre = usuarioCorrecto.Nombre;
 
                             //Cambio de página
                             Application.Current.MainPage = new NavigationPage(new InicioPage());

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace EncuestaHorizonte.ViewModels
@@ -48,7 +49,18 @@ namespace EncuestaHorizonte.ViewModels
         public InicioViewModel()
         {
             //this.apiService = new ApiService();
-            this.Usuario = Settings.Nombre;
+            /*try
+            {
+                this.Usuario = SecureStorage.GetAsync("nombre_secure_storage").Result;
+            }
+            catch (Exception ex)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    ex.Message,
+                    "Aceptar");
+            }*/
+            //this.Usuario = Settings.Nombre;
             this.Afi = new Afiliado();
         }
         #endregion

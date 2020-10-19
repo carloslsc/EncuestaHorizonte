@@ -17,7 +17,7 @@
               HeightRequest="100"
               ItemsSource="{Binding MenuItems, Mode=TwoWay}">
       <ListView.Header>
-        <Grid BackgroundColor="#03A9F4"
+                <Grid BackgroundColor="#012d40"
               HeightRequest="70">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

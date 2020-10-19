@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Security.Cryptography;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace EncuestaHorizonte.ViewModels
 {
@@ -121,17 +122,28 @@ namespace EncuestaHorizonte.ViewModels
         public ConfigurationViewModel()
         {
             this.apiService = new ApiService();
+            try
+            {
+                var adminuStorage = SecureStorage.GetAsync("adminu_secure_storage");
+                var adminpStorage = SecureStorage.GetAsync("adminp_secure_storage");
+                this.AdminU = adminuStorage.Result;
+                this.AdminP = adminpStorage.Result;
+            }
+            catch (Exception ex)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Error",
+                    ex.Message,
+                    "Acepttar");
+            }
             this.Servidor = Settings.Servidor;
-            this.AdminU = Settings.AdminU;
-            this.AdminP = Settings.AdminP;
+            //this.AdminU = Settings.AdminU;
+            //this.AdminP = Settings.AdminP;
             this.Visible = false;
             this.Running = false;
             this.IsVisible = false;
             this.IsRunning = false;
-            if (!Settings.Area.Equals(string.Empty))
-            {
-                this.LugarSelected = Settings.Area;
-            }
+            
         }
         #endregion
 
@@ -193,8 +205,22 @@ namespace EncuestaHorizonte.ViewModels
                 }
 
                 //Eliminar las persistencias del area
-                Settings.Area = string.Empty;
-                Settings.IdArea = string.Empty;
+
+                try
+                {
+                    await SecureStorage.SetAsync("area_secure_storage", string.Empty);
+                    await SecureStorage.SetAsync("idarea_secure_storage", string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Error",
+                        ex.Message,
+                        "Acepttar");
+                }
+                
+                //Settings.Area = string.Empty;
+                //Settings.IdArea = string.Empty;
 
                 //Limpiar los lugares
                 this.Lugares.Clear();
@@ -249,21 +275,56 @@ namespace EncuestaHorizonte.ViewModels
             {
                 //Se copian los datos ingresados a una clase de persistencia llamada Settings
                 Settings.Servidor = this.Servidor;
-                Settings.AdminU = this.AdminU;
-                Settings.AdminP = this.AdminP;
+                //Settings.AdminU = this.AdminU;
+                //Settings.AdminP = this.AdminP;
 
-                
+                try
+                {
+                    await SecureStorage.SetAsync("adminu_secure_storage", this.AdminU);
+                    await SecureStorage.SetAsync("adminp_secure_storage", this.AdminP);
+                }
+                catch (Exception ex)
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Error",
+                        ex.Message,
+                        "Acepttar");
+                }
+
+
                 if (!this.LugarSelected.Equals(this.Lugares.ElementAt(0)))
                 {
                     //Se obtiene el Id del lugar
                     using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                     {
                         var tabla = conn.Table<Lugares>().Where(l => l.Lugar == this.LugarSelected).FirstOrDefault();
-                        Settings.IdArea = tabla.Id.ToString();
+                        try
+                        {
+                            await SecureStorage.SetAsync("idarea_secure_storage", tabla.Id.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            await Application.Current.MainPage.DisplayAlert(
+                                "Error",
+                                ex.Message,
+                                "Acepttar");
+                        }
+                        //Settings.IdArea = tabla.Id.ToString();
                     }
 
                     //Colocar en persistencia el lugar seleccionado
-                    Settings.Area = this.LugarSelected;
+                    //Settings.Area = this.LugarSelected;
+                    try
+                    {
+                        await SecureStorage.SetAsync("area_secure_storage", this.LugarSelected);
+                    }
+                    catch (Exception ex)
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Error",
+                            ex.Message,
+                            "Acepttar");
+                    }
 
                     //Se desactiva el ActivityIndicator
                     this.Visible = false;
@@ -346,25 +407,38 @@ namespace EncuestaHorizonte.ViewModels
                     conn.DropTable<Usuarios>();
                     conn.CreateTable<Usuarios>();
 
-                    //Inserción de usuarios
-                    for (int i = 0; i < list.Count; i++)
+                    try
                     {
-                        //Verificación de lugar
-                        if (list[i].Id_Lugar.Equals(Int32.Parse(Settings.IdArea)))
+                        var idareaStorage = SecureStorage.GetAsync("idarea_secure_storage");
+                        //Inserción de usuarios
+                        for (int i = 0; i < list.Count; i++)
                         {
-                            //Creación del modelo usuario
-                            Usuarios Usuario = new Usuarios()
+                            //Verificación de lugar
+                            if (list[i].Id_Lugar.Equals(Int32.Parse(idareaStorage.Result)))
                             {
-                                Id = list[i].Id_Usuario,
-                                Nombre = list[i].Nombre,
-                                Usuario = list[i].Usuario,
-                                Password = list[i].Password,
-                                Id_Lugar = list[i].Id_Lugar
-                            };
-                            //Inserción a la tabla usuario
-                            rows += conn.Insert(Usuario);
+                                //Creación del modelo usuario
+                                Usuarios Usuario = new Usuarios()
+                                {
+                                    Id = list[i].Id_Usuario,
+                                    Nombre = list[i].Nombre,
+                                    Usuario = list[i].Usuario,
+                                    Password = list[i].Password,
+                                    Id_Lugar = list[i].Id_Lugar
+                                };
+                                //Inserción a la tabla usuario
+                                rows += conn.Insert(Usuario);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Error",
+                            ex.Message,
+                            "Acepttar");
+                    }
+
+                    
                 }
 
                 //Se desactiva el ActivityIndicator

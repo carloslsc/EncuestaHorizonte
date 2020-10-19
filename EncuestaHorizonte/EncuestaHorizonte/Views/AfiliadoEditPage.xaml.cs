@@ -25,12 +25,12 @@ namespace EncuestaHorizonte.Views
             TheAfi = Afi;
 
             InitializeComponent();
+
+            Inicio();
         }
 
-        protected override void OnAppearing()
+        protected void Inicio()
         {
-            base.OnAppearing();
-
             try
             {
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
@@ -65,15 +65,11 @@ namespace EncuestaHorizonte.Views
                     Facebook.Text = Afiliado.Facebook;
                     Observacion.Text = Afiliado.Observaciones;
 
-                    Image.Source = "no_image";
-                    CredencialFrontal.Source = "no_image";
-                    CredencialPosterior.Source = "no_image";
-
                     try
                     {
                         if (!Afiliado.Foto.Equals(null))
                             Image.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.Foto));
-
+                        
                         if (!Afiliado.CredencialFrontal.Equals(null))
                             CredencialFrontal.Source = ImageSource.FromStream(() => new MemoryStream(Afiliado.CredencialFrontal));
 
@@ -91,6 +87,7 @@ namespace EncuestaHorizonte.Views
 
                 throw;
             }
+
         }
     }
 }

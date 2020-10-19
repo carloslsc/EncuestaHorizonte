@@ -10,6 +10,11 @@
             BindingContext="{Binding Login}">
             <StackLayout
                 Padding="20">
+                <Image
+                    x:Name="Logo"
+                    Margin="0, 50, 0, -150"
+                    WidthRequest="200"
+                    />
                 <!--<Image
                     Margin="0, 50, 0, 10"
                     Source="logo"
@@ -60,7 +65,7 @@
                     IsRunning="{Binding IsRunning, Mode=TwoWay}"
                     VerticalOptions="CenterAndExpand"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#012d40"
                     BorderWidth="3"
                     Command="{Binding LoginCommand}"
                     HeightRequest="50"

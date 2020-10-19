@@ -21,12 +21,12 @@
                     VerticalOptions="Center"
                     BackgroundColor="#F0F0F0">
                 </Image>
-                    <Button
-                    BackgroundColor="#0288D1"
+                <Button
+                    BackgroundColor="#006064"
                     BorderWidth="3"
                     Command="{Binding SelectImageCommand}"
                     HorizontalOptions="FillAndExpand"
-                    Text="Nueva Imagen"
+                    Text="FOTO DE PERFIL"
                     TextColor="White"
                     />
                 <Label
@@ -167,6 +167,7 @@
                         Keyboard="Numeric"
                         Text="{Binding Edad, Mode=TwoWay}"
                         TextColor="Black"
+                        MaxLength="3"
                         Placeholder="Edad"
                         PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand"/>
@@ -604,24 +605,25 @@
                     VerticalOptions="Center"/>
                 <Frame
                         Padding="10, 0, 10, 0">
-                    <Entry
+                    <Editor
                         x:Name="Observacion"
                         BackgroundColor="Transparent"
+                        HeightRequest="100"
                         HorizontalOptions="FillAndExpand"
-                        HorizontalTextAlignment="Center"
                         Text="{Binding Observacion, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Observaciones"
                         PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand">
-                        <Entry.Keyboard>
+                        <Editor.Keyboard>
                             <Keyboard x:FactoryMethod="Create">
                                 <x:Arguments>
-                                    <KeyboardFlags>CapitalizeWord</KeyboardFlags>
+                                    <KeyboardFlags>CapitalizeSentence</KeyboardFlags>
                                 </x:Arguments>
                             </Keyboard>
-                        </Entry.Keyboard>
-                    </Entry>
+                        </Editor.Keyboard>
+
+                    </Editor>
                 </Frame>
                 <Grid
                     Padding="0, 0, 0, 10">
@@ -660,7 +662,7 @@
                     <Button
                     Grid.Column="0"
                     Grid.Row="1"
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#006064"
                     BorderWidth="3"
                     Command="{Binding SelectCredencialFrontalCommand}"
                     HorizontalOptions="FillAndExpand"
@@ -670,7 +672,7 @@
                     <Button
                     Grid.Column="1"
                     Grid.Row="1"
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#006064"
                     BorderWidth="3"
                     Command="{Binding SelectCredencialPosteriorCommand}"
                     HorizontalOptions="FillAndExpand"
@@ -678,6 +680,13 @@
                     TextColor="White"
                     />
                 </Grid>
+                <BoxView   
+                   VerticalOptions="Center"
+                   HorizontalOptions="CenterAndExpand"
+                   HeightRequest="1"
+                   WidthRequest="300"  
+                   Margin="0,15,0,15"
+                   Color="#012d40"/>
                 <Grid
                     Padding="0, 0, 0, 10">
                     <Grid.ColumnDefinitions>
@@ -688,7 +697,7 @@
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Button
-                        BackgroundColor="#0288D1"
+                        BackgroundColor="#d32f2f"
                         BorderWidth="3"
                         Command="{Binding DeleteCommand}"
                         Grid.Column="0"
@@ -698,7 +707,7 @@
                         TextColor="White"
                     />
                     <Button
-                        BackgroundColor="#0288D1"
+                        BackgroundColor="#012d40"
                         BorderWidth="3"
                         Command="{Binding EditCommand}"
                         Grid.Column="1"
@@ -708,8 +717,15 @@
                         TextColor="White"
                     />
                 </Grid>
+                <BoxView   
+                   VerticalOptions="Center"
+                   HorizontalOptions="CenterAndExpand"
+                   HeightRequest="1"
+                   WidthRequest="300"  
+                   Margin="0,15,0,15"
+                   Color="#012d40"/>
                 <Button
-                    BackgroundColor="#0288D1"
+                    BackgroundColor="#33566b"
                     BorderWidth="3"
                     Command="{Binding CancelarCommand}"
                     HorizontalOptions="FillAndExpand"

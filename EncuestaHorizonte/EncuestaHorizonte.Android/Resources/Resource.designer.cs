@@ -8680,58 +8680,76 @@ namespace EncuestaHorizonte.Droid
 			public const int ic_mtrl_chip_close_circle = 2131165286;
 			
 			// aapt resource value: 0x7F070067
-			public const int mtrl_snackbar_background = 2131165287;
+			public const int LogoAmatenangodelaFrontera = 2131165287;
 			
 			// aapt resource value: 0x7F070068
-			public const int mtrl_tabs_default_indicator = 2131165288;
+			public const int LogoCiudadHidalgo = 2131165288;
 			
 			// aapt resource value: 0x7F070069
-			public const int navigation_empty_icon = 2131165289;
-			
-			// aapt resource value: 0x7F07006B
-			public const int notification_action_background = 2131165291;
-			
-			// aapt resource value: 0x7F07006C
-			public const int notification_bg = 2131165292;
-			
-			// aapt resource value: 0x7F07006D
-			public const int notification_bg_low = 2131165293;
-			
-			// aapt resource value: 0x7F07006E
-			public const int notification_bg_low_normal = 2131165294;
-			
-			// aapt resource value: 0x7F07006F
-			public const int notification_bg_low_pressed = 2131165295;
-			
-			// aapt resource value: 0x7F070070
-			public const int notification_bg_normal = 2131165296;
-			
-			// aapt resource value: 0x7F070071
-			public const int notification_bg_normal_pressed = 2131165297;
-			
-			// aapt resource value: 0x7F070072
-			public const int notification_icon_background = 2131165298;
-			
-			// aapt resource value: 0x7F070073
-			public const int notification_template_icon_bg = 2131165299;
-			
-			// aapt resource value: 0x7F070074
-			public const int notification_template_icon_low_bg = 2131165300;
-			
-			// aapt resource value: 0x7F070075
-			public const int notification_tile_bg = 2131165301;
-			
-			// aapt resource value: 0x7F070076
-			public const int notify_panel_notification_icon_bg = 2131165302;
+			public const int LogoEscuintla = 2131165289;
 			
 			// aapt resource value: 0x7F07006A
-			public const int no_image = 2131165290;
+			public const int LogoHorizonte = 2131165290;
+			
+			// aapt resource value: 0x7F07006B
+			public const int LogoMetapadeDominguez = 2131165291;
+			
+			// aapt resource value: 0x7F07006C
+			public const int LogoMotozintla = 2131165292;
+			
+			// aapt resource value: 0x7F07006D
+			public const int mtrl_snackbar_background = 2131165293;
+			
+			// aapt resource value: 0x7F07006E
+			public const int mtrl_tabs_default_indicator = 2131165294;
+			
+			// aapt resource value: 0x7F07006F
+			public const int navigation_empty_icon = 2131165295;
+			
+			// aapt resource value: 0x7F070071
+			public const int notification_action_background = 2131165297;
+			
+			// aapt resource value: 0x7F070072
+			public const int notification_bg = 2131165298;
+			
+			// aapt resource value: 0x7F070073
+			public const int notification_bg_low = 2131165299;
+			
+			// aapt resource value: 0x7F070074
+			public const int notification_bg_low_normal = 2131165300;
+			
+			// aapt resource value: 0x7F070075
+			public const int notification_bg_low_pressed = 2131165301;
+			
+			// aapt resource value: 0x7F070076
+			public const int notification_bg_normal = 2131165302;
 			
 			// aapt resource value: 0x7F070077
-			public const int tooltip_frame_dark = 2131165303;
+			public const int notification_bg_normal_pressed = 2131165303;
 			
 			// aapt resource value: 0x7F070078
-			public const int tooltip_frame_light = 2131165304;
+			public const int notification_icon_background = 2131165304;
+			
+			// aapt resource value: 0x7F070079
+			public const int notification_template_icon_bg = 2131165305;
+			
+			// aapt resource value: 0x7F07007A
+			public const int notification_template_icon_low_bg = 2131165306;
+			
+			// aapt resource value: 0x7F07007B
+			public const int notification_tile_bg = 2131165307;
+			
+			// aapt resource value: 0x7F07007C
+			public const int notify_panel_notification_icon_bg = 2131165308;
+			
+			// aapt resource value: 0x7F070070
+			public const int no_image = 2131165296;
+			
+			// aapt resource value: 0x7F07007D
+			public const int tooltip_frame_dark = 2131165309;
+			
+			// aapt resource value: 0x7F07007E
+			public const int tooltip_frame_light = 2131165310;
 			
 			static Drawable()
 			{
@@ -9705,7 +9723,25 @@ namespace EncuestaHorizonte.Droid
 			public const int launcher_foreground = 2131492868;
 			
 			// aapt resource value: 0x7F0C0005
-			public const int no_image = 2131492869;
+			public const int LogoAmatenangodelaFrontera = 2131492869;
+			
+			// aapt resource value: 0x7F0C0006
+			public const int LogoCiudadHidalgo = 2131492870;
+			
+			// aapt resource value: 0x7F0C0007
+			public const int LogoEscuintla = 2131492871;
+			
+			// aapt resource value: 0x7F0C0008
+			public const int LogoHorizonte = 2131492872;
+			
+			// aapt resource value: 0x7F0C0009
+			public const int LogoMetapadeDominguez = 2131492873;
+			
+			// aapt resource value: 0x7F0C000A
+			public const int LogoMotozintla = 2131492874;
+			
+			// aapt resource value: 0x7F0C000B
+			public const int no_image = 2131492875;
 			
 			static Mipmap()
 			{
@@ -14366,10 +14402,13 @@ namespace EncuestaHorizonte.Droid
 		{
 			
 			// aapt resource value: 0x7F100000
-			public const int file_paths = 2131755008;
+			public const int auto_backup_rules = 2131755008;
 			
 			// aapt resource value: 0x7F100001
-			public const int xamarin_essentials_fileprovider_file_paths = 2131755009;
+			public const int file_paths = 2131755009;
+			
+			// aapt resource value: 0x7F100002
+			public const int xamarin_essentials_fileprovider_file_paths = 2131755010;
 			
 			static Xml()
 			{
