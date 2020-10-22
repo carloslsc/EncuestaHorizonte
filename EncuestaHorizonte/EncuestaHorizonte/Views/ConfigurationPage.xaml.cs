@@ -46,10 +46,10 @@ namespace EncuestaHorizonte.Views
 
                         try
                         {
-                            var areaStorage = SecureStorage.GetAsync("area_secure_storage");
-                            if (!areaStorage.Equals(string.Empty))
+                            var areaStorage = SecureStorage.GetAsync("area_secure_storage").Result;
+                            if (!string.IsNullOrEmpty(areaStorage))
                             {
-                                Lugar.SelectedItem = areaStorage.Result;
+                                Lugar.SelectedItem = areaStorage;
                             }
                             else
                             {
@@ -58,10 +58,11 @@ namespace EncuestaHorizonte.Views
                         }
                         catch (Exception ex)
                         {
-                            Application.Current.MainPage.DisplayAlert(
+                            Lugar.SelectedItem = lugares.ElementAt(0);
+                            /*Application.Current.MainPage.DisplayAlert(
                                 "Error",
                                 ex.Message,
-                                "Acepttar");
+                                "Acepttar");*/
                         }
 
                         

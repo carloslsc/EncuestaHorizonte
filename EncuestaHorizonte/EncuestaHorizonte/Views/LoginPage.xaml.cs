@@ -36,10 +36,12 @@ namespace EncuestaHorizonte.Views
             }
             catch (Exception ex)
             {
-                Application.Current.MainPage.DisplayAlert(
+
+                Logo.Source = "LogoHorizonte";
+                /*Application.Current.MainPage.DisplayAlert(
                     "Error",
                     ex.Message,
-                    "Acepttar");
+                    "Acepttar");*/
             }
         }
     }

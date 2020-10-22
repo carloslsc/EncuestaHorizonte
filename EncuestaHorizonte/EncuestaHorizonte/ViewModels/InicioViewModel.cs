@@ -95,19 +95,30 @@ namespace EncuestaHorizonte.ViewModels
 
         private async void Editar()
         {
-            //Verificacion de haber seleccionado un usuario
-            if (this.Afi.Id > 0)
+            try
             {
-                //Crear la variable del usuario que se mandara
-                var afiliado = this.Afi;
-                
-                //Reseteo del item seleccionado
-                this.Afi = new Afiliado();
-                
-                //Cambio de pagina
-                await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(afiliado));
+                //Verificacion de haber seleccionado un usuario
+                if (this.Afi.Id > 0)
+                {
+                    //Crear la variable del usuario que se mandara
+                    var afiliado = this.Afi;
+
+                    //Reseteo del item seleccionado
+                    this.Afi = new Afiliado();
+
+                    //Cambio de pagina
+                    await Application.Current.MainPage.Navigation.PushAsync(new AfiliadoEditPage(afiliado));
+                }
+                else
+                {
+                    //Mensaje para el usuario
+                    await Application.Current.MainPage.DisplayAlert(
+                        "ERROR",
+                        "No ha seleccionado ningún afiliado",
+                        "Aceptar");
+                }
             }
-            else
+            catch (Exception)
             {
                 //Mensaje para el usuario
                 await Application.Current.MainPage.DisplayAlert(
@@ -115,6 +126,7 @@ namespace EncuestaHorizonte.ViewModels
                     "No ha seleccionado ningún afiliado",
                     "Aceptar");
             }
+            
         }
 
         #endregion

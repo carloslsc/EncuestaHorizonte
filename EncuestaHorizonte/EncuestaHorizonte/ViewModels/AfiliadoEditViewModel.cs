@@ -697,7 +697,7 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo región no es númerico",
                     "Aceptar");
             }
-            else if (this.Zona.Equals(string.Empty))
+            /*else if (this.Zona.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
@@ -724,7 +724,7 @@ namespace EncuestaHorizonte.ViewModels
                     "ERROR",
                     "Campo sección no es númerico",
                     "Aceptar");
-            }
+            }*/
             else if (this.Casilla.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
@@ -803,25 +803,25 @@ namespace EncuestaHorizonte.ViewModels
                     "Campo Número INE Vacío",
                     "Aceptar");
             }
-            else if (!this.NumIne.Length.Equals(14))
+            else if (!this.NumIne.Length.Equals(13))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    string.Format("Campo Número INE Tiene {0} dígitos y deben ser 14 dígitos", this.NumIne.Length),
+                    string.Format("Campo Número INE Tiene {0} dígitos y deben ser 13 dígitos", this.NumIne.Length),
                     "Aceptar");
             }
             else if (this.ClaveIne.Equals(string.Empty))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    "Campo Clave INE Vacío",
+                    "Campo Clave de Elector Vacío",
                     "Aceptar");
             }
-            else if (!this.ClaveIne.Length.Equals(17))
+            else if (!this.ClaveIne.Length.Equals(18))
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "ERROR",
-                    string.Format("Campo Clave del INE Tiene {0} caracteres y deben ser 17 caracteres", this.ClaveIne.Length),
+                    string.Format("Campo Clave de Elector Tiene {0} caracteres y deben ser 18 caracteres", this.ClaveIne.Length),
                     "Aceptar");
             }
             else if (this.Curp.Equals(string.Empty))

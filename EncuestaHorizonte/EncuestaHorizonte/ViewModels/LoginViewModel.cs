@@ -82,13 +82,21 @@ namespace EncuestaHorizonte.ViewModels
             {
                 usuario = SecureStorage.GetAsync("adminu_secure_storage").Result;
                 contra = SecureStorage.GetAsync("adminp_secure_storage").Result;
+                if (string.IsNullOrEmpty(usuario))
+                {
+                    usuario = string.Empty;
+                    contra = string.Empty;
+                }
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert(
+                
+                usuario = string.Empty;
+                contra = string.Empty;
+                /*await Application.Current.MainPage.DisplayAlert(
                     "Error",
                     ex.Message,
-                    "Aceptar");
+                    "Aceptar");*/
             }
 
             //Acceso a la configuración cuando la app nunca se ha usado

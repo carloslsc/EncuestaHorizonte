@@ -74,6 +74,8 @@
                             SelectedIndex="{Binding IndexLu, Mode=TwoWay}"
                             SelectedItem="{Binding LugarSelected, Mode=TwoWay}"
                             TextColor="Black"
+                            Title="Lugares"
+                            TitleColor="Black"
                             VerticalOptions="EndAndExpand"/>
                         <!--<Entry
                             VerticalOptions="CenterAndExpand"

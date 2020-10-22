@@ -145,7 +145,7 @@
                         SelectedItem="{Binding SexoSelected, Mode=TwoWay}"
                         TextColor="Black"
                         Title="Seleccione un Sexo"
-                        TitleColor="White"
+                        TitleColor="Black"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -183,7 +183,7 @@
                         SelectedItem="{Binding EstadoCivilSelected, Mode=TwoWay}"
                         TextColor="Black"
                         Title="Seleccione un Estado Civil"
-                        TitleColor="White"
+                        TitleColor="Black"
                         VerticalOptions="EndAndExpand"/>
                 </Frame>
                 <Label
@@ -430,7 +430,7 @@
                         SelectedItem="{Binding Ocupacion, Mode=TwoWay}"
                         TextColor="Black"
                         Title="Seleccione una ocupación"
-                        TitleColor="White"
+                        TitleColor="Black"
                         VerticalOptions="EndAndExpand"/>
                     <!--<Entry
                         BackgroundColor="Transparent"
@@ -458,7 +458,7 @@
                         SelectedItem="{Binding Escolaridad, Mode=TwoWay}"
                         TextColor="Black"
                         Title="Seleccione una escolaridad"
-                        TitleColor="White"
+                        TitleColor="Black"
                         VerticalOptions="EndAndExpand"/>
                     <!--<Entry
                         BackgroundColor="Transparent"
@@ -500,7 +500,7 @@
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
                         Keyboard="Numeric"
-                        MaxLength="14"
+                        MaxLength="13"
                         Text="{Binding NumIne, Mode=TwoWay}"
                         TextColor="Black"
                         Placeholder="Número de INE"
@@ -509,7 +509,7 @@
                 </Frame>
                 <Label
                     FontSize="15"
-                    Text="Clave de INE"
+                    Text="Clave de Elector"
                     TextColor="Black"
                     VerticalOptions="Center"/>
                 <Frame
@@ -518,10 +518,10 @@
                         BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         HorizontalTextAlignment="Center"
-                        MaxLength="17"
+                        MaxLength="18"
                         Text="{Binding ClaveIne, Mode=TwoWay}"
                         TextColor="Black"
-                        Placeholder="Clave INE"
+                        Placeholder="Clave de Elector"
                         PlaceholderColor="Gray"
                         VerticalOptions="EndAndExpand">
                         <Entry.Keyboard>
